@@ -86,7 +86,7 @@ export class Ball {
       this.acceleration.x = 0;
     }
     if(!this.direction.up && !this.direction.down){
-        this.acceleration.y = 0;
+      this.acceleration.y = 0;
     }
     
     this.acceleration = this.acceleration.unit().mult(this.accelerationIncrement);
@@ -110,8 +110,7 @@ export class Ball {
   }
 
   collisionDetection(ball: Ball){
-    if(this.getRadius() + ball.getRadius() >= ball.getPosition().subtr(this.getPosition()).mag()) return true;
-    return false;
+    return Ball.collisionDetection(this, ball)
   }
 
 
@@ -124,11 +123,23 @@ export class Ball {
   }
 
   penetrationResolution(ball: Ball){
-    const distance = this.getPosition().subtr(ball.getPosition());
-    const penetrationDepth = this.getRadius() + ball.getRadius() - distance.mag();
-    const penetrationResolution = distance.unit().mult(penetrationDepth / 2);
-    this.setPosition(this.getPosition().add(penetrationResolution));
-    ball.setPosition(ball.getPosition().add(penetrationResolution.mult(-1)));
+    Ball.penetrationResolution(this, ball);
   }
 
+  
+  static collisionResultion(ball1: Ball, ball2: Ball){
+    const normal = ball1.getPosition().subtr(ball2.getPosition()).unit();
+    const relativeVelocity = ball1.velocity.subtr(ball2.velocity);
+    const separatingVelocity = Vector.dot(relativeVelocity, normal);
+    const newSeparatingVelocity = -separatingVelocity;
+    const separatingVelocityVector = normal.mult(newSeparatingVelocity);
+
+    ball1.velocity = ball1.velocity.add(separatingVelocityVector);
+    ball2.velocity = ball2.velocity.add(separatingVelocityVector.mult(-1));
+  }
+
+
+  collisionResolution(ball: Ball){
+    Ball.collisionResultion(this, ball);
+  }
 }

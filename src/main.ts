@@ -23,7 +23,6 @@ for(let i = 0; i < 3; i ++){
 balls.push(playerBall)
 
 function mainLoop(timeStamp: number){
-
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
 
@@ -33,8 +32,14 @@ function mainLoop(timeStamp: number){
 
     // add collision for each ball to another
     for(let i = index + 1; i < balls.length; i++){
-      if(balls[index].collisionDetection(balls[i])) balls[index].penetrationResolution(balls[i]) 
+      if(balls[index].collisionDetection(balls[i])){ 
+        balls[index].penetrationResolution(balls[i]);
+        balls[index].collisionResolution(balls[i]);
+
+      }
     }
+
+
   })
 
   requestAnimationFrame(mainLoop);
