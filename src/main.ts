@@ -2,6 +2,7 @@ import { Ball } from './ball';
 import { HTMLElementController } from './controller';
 import { CanvasDrawer } from './drawer';
 import './style.css'
+import { NumberUtils } from './util';
 import { Vector } from './vector';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -10,14 +11,21 @@ const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 const controller = new HTMLElementController(canvas);
 const drawer = new CanvasDrawer(ctx);
 
-const playerBall = new Ball(new Vector(200, 200), 30, drawer, undefined, controller);
+const playerBall = new Ball(new Vector(200, 200), 30, drawer, 100, "#6ee7b7", controller);
 const balls: Ball[] = [];
 
 for(let i = 0; i < 3; i ++){
-  balls.push(new Ball(
+  const newObj = new Ball(
     new Vector(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight),
-    30, drawer
-  ));
+    NumberUtils.getRandomInt(10, 50),
+    drawer, 
+    NumberUtils.getRandomInt(10, 1000), 
+    "#6ee7b7"
+  );
+
+  newObj.setElascticity(NumberUtils.getRandomInt(0,3))
+
+  balls.push(newObj);
 }
 
 balls.push(playerBall)

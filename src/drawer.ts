@@ -4,6 +4,7 @@
 export interface Drawer{
   drawLine(startX: number, startY: number, endX: number, endY: number, color?: string): void;
   drawCircle(x: number, y: number, radius: number, color?: string): void;
+  fillText(text: string, x: number, y: number, color?: string): void;
 }
 
 
@@ -14,6 +15,10 @@ export class CanvasDrawer implements Drawer{
   constructor(
     private readonly ctx: CanvasRenderingContext2D
   ){}
+  fillText(text: string, x: number, y: number, color?: string): void {
+    this.ctx.fillStyle = color ?? "black";
+    this.ctx.fillText(text, x, y);
+  }
   drawLine(startX: number, startY: number, endX: number, endY: number, color?: string): void {
     this.ctx.beginPath();
     this.ctx.moveTo(startX, startY);
