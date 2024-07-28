@@ -39,9 +39,12 @@ export class Ball {
     this.drawer = drawer;
     this.color = color ?? "#dc2626";
     this.controller = controller;
+
+    if(this.controller) this.registerController();
   }
 
   private registerController(){
+    console.log("registering controller");
     if(!this.controller) {
       console.log("controller not defined");
       return;

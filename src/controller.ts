@@ -48,7 +48,7 @@ export class HTMLElementController implements Controller {
     this.htmlElement.addEventListener("keydown", (e) => {
       switch(e.code){
         case "ArrowUp" : this.triggerEventBus("onUp");  break;
-        case "ArrowDown" : this.triggerEventBus("onDown");  break;
+        case "ArrowDown" : this.triggerEventBus("onDown"); break;
         case "ArrowRight" : this.triggerEventBus("onRight");  break;
         case "ArrowLeft" : this.triggerEventBus("onLeft");  break;
       }
@@ -65,7 +65,7 @@ export class HTMLElementController implements Controller {
   }
 
   private triggerEventBus (key: keyof IControllerEventBus){
-    this.controllerEventBus[key].forEach(fn => fn);
+    this.controllerEventBus[key].forEach(fn => fn());
   }
 
   private addEventListener(cb: () => any, key: keyof IControllerEventBus){
