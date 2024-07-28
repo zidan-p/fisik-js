@@ -14,6 +14,8 @@ export class Ball {
   private velocity = new Vector(0,0);
   private acceleration = new Vector(0,0);
 
+  public static lineHelper = new Vector(550, 400);
+
   public direction = {
     up: false,
     down: false,
@@ -42,6 +44,12 @@ export class Ball {
 
     if(this.controller) this.registerController();
   }
+
+  public getPosition (){return this.position}
+  public setPosition(pos: Vector) {this.position = pos};
+
+  public getRadius() {return this.radius}
+  public setRadius(r: number){ this.radius = r}
 
   private registerController(){
     console.log("registering controller");
@@ -89,6 +97,38 @@ export class Ball {
 
   draw(){
     this.drawer.drawCircle(this.position.x, this.position.y, this.radius, this.color);
+
+    // also draw vector helper
+    Vector.drawViewLine(Ball.lineHelper, this.acceleration, 50, this.drawer, "green");
+    Vector.drawViewLine(Ball.lineHelper, this.velocity, 10, this.drawer, "red");
+  }
+
+
+  static collisionDetection(ball1: Ball, ball2: Ball){
+    if(ball1.getRadius() + ball2.getRadius() >= ball2.getPosition().subtr(ball1.getPosition()).mag()) return true;
+    return false;
+  }
+
+  collisionDetection(ball: Ball){
+    if(this.getRadius() + ball.getRadius() >= ball.getPosition().subtr(this.getPosition()).mag()) return true;
+    return false;
+  }
+
+
+  static penetrationResolution(ball1: Ball, ball2: Ball){
+    const distance = ball1.getPosition().subtr(ball2.getPosition());
+    const penetrationDepth = ball1.getRadius() + ball2.getRadius() - distance.mag();
+    const penetrationResolution = distance.unit().mult(penetrationDepth / 2);
+    ball1.setPosition(ball1.getPosition().add(penetrationResolution));
+    ball2.setPosition(ball2.getPosition().add(penetrationResolution.mult(-1)));
+  }
+
+  penetrationResolution(ball: Ball){
+    const distance = this.getPosition().subtr(ball.getPosition());
+    const penetrationDepth = this.getRadius() + ball.getRadius() - distance.mag();
+    const penetrationResolution = distance.unit().mult(penetrationDepth / 2);
+    this.setPosition(this.getPosition().add(penetrationResolution));
+    ball.setPosition(ball.getPosition().add(penetrationResolution.mult(-1)));
   }
 
 }

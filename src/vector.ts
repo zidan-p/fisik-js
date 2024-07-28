@@ -1,3 +1,4 @@
+import { Drawer } from "./drawer";
 
 
 
@@ -36,12 +37,27 @@ export class Vector{
     if(this.mag() === 0){
       return new Vector(0,0);
     } else {
-        return new Vector(this.x/this.mag(), this.y/this.mag());
+        return new Vector(this.x / this.mag(), this.y / this.mag());
     }
   }
 
   //returns the length of a vectors projection onto the other one
   static dot(v1: Vector, v2: Vector){
-    return v1.x*v2.x + v1.y*v2.y;
+    return v1.x*v2.x + v1.y*v2.y; 
+  }
+
+  dot(vec: Vector){
+    return this.x * vec.x + this.y * vec.y;
+  }
+
+  static drawViewLine(origin: Vector, vec: Vector, magnifier: number, drawer: Drawer, color: string ){
+
+    drawer.drawLine(
+      origin.x, 
+      origin.y, 
+      origin.x + vec.x * magnifier, 
+      origin.y + vec.y * magnifier, 
+      color ?? "green"
+    );
   }
 }
