@@ -4,6 +4,7 @@ import { CanvasDrawer } from './drawer';
 import './style.css'
 import { NumberUtils } from './util';
 import { Vector } from './vector';
+import { Wall } from './wall';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -11,7 +12,10 @@ const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 const controller = new HTMLElementController(canvas);
 const drawer = new CanvasDrawer(ctx);
 
-const playerBall = new Ball(new Vector(200, 200), 30, drawer, 100, "#6ee7b7", controller);
+
+// --- player and ball --
+const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "#6ee7b7", controller);
+playerBall.setElascticity(0.7)
 const balls: Ball[] = [];
 
 for(let i = 0; i < 3; i ++){
@@ -27,13 +31,25 @@ for(let i = 0; i < 3; i ++){
 
   balls.push(newObj);
 }
-
 balls.push(playerBall)
+
+
+// -- walls ---
+const walls: Wall[] = [];
+// walls.push(new Wall(new Vector(200, 200), new Vector(400, 300), drawer));
+walls.push(
+  new Wall(new Vector(0, 0), new Vector(0, canvas.clientHeight), drawer),
+  new Wall(new Vector(0, 0), new Vector(canvas.clientWidth, 0), drawer),
+  new Wall(new Vector(0, canvas.clientHeight), new Vector(canvas.clientWidth, canvas.clientHeight), drawer),
+  new Wall(new Vector(canvas.clientWidth, 0), new Vector(canvas.clientWidth, canvas.clientHeight), drawer),
+)
+
 
 function mainLoop(timeStamp: number){
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
 
+  // drawe balls
   balls.forEach((ball, index) => {
     ball.draw();
     ball.move();
@@ -43,12 +59,27 @@ function mainLoop(timeStamp: number){
       if(balls[index].collisionDetection(balls[i])){ 
         balls[index].penetrationResolution(balls[i]);
         balls[index].collisionResolution(balls[i]);
-
       }
     }
 
+    // add collision ball and wall
 
-  })
+    walls.forEach(w => {
+      if(w.collisionDetectionBallAndWall(ball)){
+        w.penetrationResolutionBallAndWall(ball);
+        w.collisionResolutionBallAndWall(ball);
+      }
+      w.draw();
+    })
+
+  });
+
+
+  // // draw distance wall
+  // walls[0].closestPosintBallandWall(playerBall)
+  //   .subtr(playerBall.getPosition())
+  //   .drawViewLineToThisVector(playerBall.getPosition(), 1, drawer, "#831843");
+
 
   requestAnimationFrame(mainLoop);
 }

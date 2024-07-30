@@ -50,6 +50,14 @@ export class Vector{
     return this.x * vec.x + this.y * vec.y;
   }
 
+  drawViewLineToTargetVector(vecTarget: Vector, magnifier: number, drawer: Drawer, color: string ){
+    Vector.drawViewLine(this, vecTarget, magnifier, drawer, color);
+  }
+
+  drawViewLineToThisVector(vecFrom: Vector, magnifier: number, drawer: Drawer, color: string){
+    Vector.drawViewLine(vecFrom,this, magnifier, drawer, color)
+  }
+
   static drawViewLine(origin: Vector, vec: Vector, magnifier: number, drawer: Drawer, color: string ){
 
     drawer.drawLine(

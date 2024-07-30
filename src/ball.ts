@@ -62,6 +62,8 @@ export class Ball {
   public setElascticity(n: number) {this.elasticity = n}
   public getElasticity(){return this.elasticity}
 
+  public getVelocity(){return this.velocity}
+  public setVelocity(v: Vector){this.velocity = v}
 
   /** 
    * TODO: find out why should inverse mass should be zero when the mass is zero?
