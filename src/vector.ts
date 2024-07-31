@@ -1,4 +1,5 @@
 import { Drawer } from "./drawer";
+import { Matrix } from "./matrix";
 
 
 
@@ -26,6 +27,16 @@ export class Vector{
   mult(n: number){
     return new Vector(this.x*n, this.y*n);
   }
+
+  multMatrix(mat: Matrix<2,2>){
+    const result = new Vector(0,0);
+    result.x = mat.data[0][0] * this.x + mat.data[0][1] * this.y;
+    result.y = mat.data[1][0] * this.x + mat.data[1][1] * this.y;
+    return result;
+  }
+
+  /** new intance for this vector */
+  newInstance(){return new Vector(this.x, this.y)}
 
   //returns a perpendicular normal vector
   normal(){

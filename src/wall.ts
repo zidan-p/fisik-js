@@ -1,17 +1,46 @@
 import { Ball } from "./ball";
+import { Controller } from "./controller";
 import { Drawer } from "./drawer";
+import { Matrix } from "./matrix";
 import { Vector } from "./vector";
 
 
 
 export class Wall {
 
+  public direction = {
+    up: false,
+    down: false,
+    right: false,
+    left: false
+  }
+
+  public center: Vector;
+  public length: number;
+  public angle: number = 0;
+  public angleVelocity = 0;
+  public refStart: Vector;
+  public refEnd: Vector;
+  public refUnit: Vector;
+
+  private _color: string = "black";
 
   constructor(
     public start: Vector,
     public end: Vector,
-    private drawer: Drawer
+    private drawer: Drawer,
+    private controller?: Controller
   ){
+
+    this.center = this.start.add(this.end).mult(0.5);
+    this.length = this.end.subtr(this.start).mag();
+
+
+    this.refStart = this.start.newInstance();
+    this.refEnd = this.end.newInstance();
+    this.refUnit = this.end.subtr(this.start).unit();
+
+    this.registerController();
   }
 
   get startPosition(){return this.start}
@@ -20,15 +49,55 @@ export class Wall {
   get endPosition(){return this.end}
   set endPosition(pos: Vector){this.end = pos}
 
+  get color(){return this._color}
+  set color(c: string){this._color = c}
+
   wallUnit(){return this.end.subtr(this.start).unit()}
 
+  private registerController(){
+    console.log("registering controller");
+    if(!this.controller) {
+      console.log("controller not defined");
+      return;
+    }
+
+    this.controller.onDown(() => this.direction.down = true);
+    this.controller.onUp(() => this.direction.up = true);
+    this.controller.onRight(() => this.direction.right = true);
+    this.controller.onLeft(() => this.direction.left = true);
+
+    this.controller.onReleaseDown(() => this.direction.down = false);
+    this.controller.onReleaseUp(() => this.direction.up = false);
+    this.controller.onReleaseRight(() => this.direction.right = false);
+    this.controller.onReleaseLeft(() => this.direction.left = false);
+  }
+
+  private keyControl(){
+    if(this.direction.left) this.angleVelocity -= 0.05;
+    if(this.direction.right) this.angleVelocity += 0.05;
+  }
+
+  private reposition(){
+    this.angle += this.angleVelocity;
+    this.angleVelocity *= 0.96;
+  }
+
+  move(){
+    this.keyControl();
+    this.reposition();
+  }
+
   draw(){
+    const rotationMatrix = Matrix.rotationMatrix(this.angle);
+    const newDirection = this.refUnit.multMatrix(rotationMatrix);
+    this.start = this.center.add(newDirection.mult(-this.length / 2));
+    this.end = this.center.add(newDirection.mult(this.length / 2));
     this.drawer.drawLine(
       this.start.x, 
       this.start.y,
       this.end.x,
       this.end.y,
-      "black"
+      this._color
     )
   }
 

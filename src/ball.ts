@@ -107,7 +107,7 @@ export class Ball {
     if(this.direction.right){
       this.acceleration.x = this.accelerationIncrement;
     }
-    if(this.direction.down){
+    if(this.direction.down){ 
       this.acceleration.y = this.accelerationIncrement;
     }
     if(!this.direction.left && !this.direction.right){

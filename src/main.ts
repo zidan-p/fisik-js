@@ -14,29 +14,29 @@ const drawer = new CanvasDrawer(ctx);
 
 
 // --- player and ball --
-const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "#6ee7b7", controller);
-playerBall.setElascticity(0.7)
+// const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "#6ee7b7", controller);
+// playerBall.setElascticity(0.7)
 const balls: Ball[] = [];
 
-for(let i = 0; i < 3; i ++){
-  const newObj = new Ball(
-    new Vector(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight),
-    NumberUtils.getRandomInt(10, 50),
-    drawer, 
-    NumberUtils.getRandomInt(10, 1000), 
-    "#6ee7b7"
-  );
+// for(let i = 0; i < 3; i ++){
+//   const newObj = new Ball(
+//     new Vector(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight),
+//     NumberUtils.getRandomInt(10, 50),
+//     drawer, 
+//     NumberUtils.getRandomInt(10, 1000), 
+//     "#6ee7b7"
+//   );
 
-  newObj.setElascticity(NumberUtils.getRandomInt(0,3))
+//   newObj.setElascticity(NumberUtils.getRandomInt(0,3))
 
-  balls.push(newObj);
-}
-balls.push(playerBall)
+//   balls.push(newObj);
+// }
+// balls.push(playerBall)
 
 
 // -- walls ---
 const walls: Wall[] = [];
-// walls.push(new Wall(new Vector(200, 200), new Vector(400, 300), drawer));
+walls.push(new Wall(new Vector(200, 200), new Vector(400, 300), drawer, controller));
 walls.push(
   new Wall(new Vector(0, 0), new Vector(0, canvas.clientHeight), drawer),
   new Wall(new Vector(0, 0), new Vector(canvas.clientWidth, 0), drawer),
@@ -50,29 +50,34 @@ function mainLoop(timeStamp: number){
 
 
   // drawe balls
-  balls.forEach((ball, index) => {
-    ball.draw();
-    ball.move();
+  // balls.forEach((ball, index) => {
+  //   ball.draw();
+  //   ball.move();
 
-    // add collision for each ball to another
-    for(let i = index + 1; i < balls.length; i++){
-      if(balls[index].collisionDetection(balls[i])){ 
-        balls[index].penetrationResolution(balls[i]);
-        balls[index].collisionResolution(balls[i]);
-      }
-    }
+  //   // add collision for each ball to another
+  //   for(let i = index + 1; i < balls.length; i++){
+  //     if(balls[index].collisionDetection(balls[i])){ 
+  //       balls[index].penetrationResolution(balls[i]);
+  //       balls[index].collisionResolution(balls[i]);
+  //     }
+  //   }
 
-    // add collision ball and wall
+  //   // add collision ball and wall
 
-    walls.forEach(w => {
-      if(w.collisionDetectionBallAndWall(ball)){
-        w.penetrationResolutionBallAndWall(ball);
-        w.collisionResolutionBallAndWall(ball);
-      }
-      w.draw();
-    })
+  //   walls.forEach(w => {
+  //     if(w.collisionDetectionBallAndWall(ball)){
+  //       w.penetrationResolutionBallAndWall(ball);
+  //       w.collisionResolutionBallAndWall(ball);
+  //     }
+  //     w.draw();
+  //   })
 
-  });
+  // });
+
+  walls.forEach(w => {
+    w.move();
+    w.draw()
+  })
 
 
   // // draw distance wall
