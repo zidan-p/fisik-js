@@ -1,5 +1,6 @@
 import { Controller } from "./controller";
 import { Drawer } from "./drawer";
+import { NumberUtils } from "./util";
 import { Vector } from "./vector";
 
 
@@ -97,7 +98,7 @@ export class Ball {
     this.controller.onReleaseLeft(() => this.direction.left = false);
   }
 
-  move(){
+  keyControl(){
     if(this.direction.left){
       this.acceleration.x = -this.accelerationIncrement;
     }
@@ -116,15 +117,22 @@ export class Ball {
     if(!this.direction.up && !this.direction.down){
       this.acceleration.y = 0;
     }
-    
+  }
+
+  reposition(){
     this.acceleration = this.acceleration.unit().mult(this.accelerationIncrement);
     this.velocity = this.velocity.add(this.acceleration);
     this.velocity = this.velocity.mult(1 - this.friction);
     this.position = this.position.add(this.velocity);
   }
 
+  move(){
+    this.keyControl();
+    this.reposition();
+  }
+
   draw(){
-    this.drawer.drawCircle(this.position.x, this.position.y, this.radius, this.color);
+    this.drawer.drawCircle(this.position.x, this.position.y, this.radius, undefined, undefined, this.color);
 
     // also draw vector helper
     Vector.drawViewLine(this.position, this.acceleration, 50, this.drawer, "green");
@@ -177,4 +185,26 @@ export class Ball {
   collisionResolution(ball: Ball){
     Ball.collisionResultion(this, ball);
   }
+}
+
+
+
+export function generateRandomBall(count: number, canvas: HTMLCanvasElement, drawer: Drawer){
+  const balls: Ball[] = [];
+
+  for(let i = 0; i < 3; i ++){
+    const newObj = new Ball(
+      new Vector(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight),
+      NumberUtils.getRandomInt(10, 50),
+      drawer, 
+      NumberUtils.getRandomInt(10, 1000), 
+      "#6ee7b7"
+    );
+
+    newObj.setElascticity(NumberUtils.getRandomInt(0,3))
+
+    balls.push(newObj);
+  }
+  
+  return balls;
 }

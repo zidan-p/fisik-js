@@ -61,6 +61,10 @@ export class Vector{
     return this.x * vec.x + this.y * vec.y;
   }
 
+  static cross(vec1: Vector, vec2: Vector){
+    return vec1.x * vec2.y - vec1.y * vec2.x;
+  }
+
   drawViewLineToTargetVector(vecTarget: Vector, magnifier: number, drawer: Drawer, color: string ){
     Vector.drawViewLine(this, vecTarget, magnifier, drawer, color);
   }

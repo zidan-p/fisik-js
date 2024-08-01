@@ -1,4 +1,5 @@
 import { Ball } from './ball';
+import { Capsule } from './capsule';
 import { HTMLElementController } from './controller';
 import { CanvasDrawer } from './drawer';
 import './style.css'
@@ -15,34 +16,28 @@ const drawer = new CanvasDrawer(ctx);
 
 // --- player and ball --
 // const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "#6ee7b7", controller);
-// playerBall.setElascticity(0.7)
 const balls: Ball[] = [];
-
-// for(let i = 0; i < 3; i ++){
-//   const newObj = new Ball(
-//     new Vector(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight),
-//     NumberUtils.getRandomInt(10, 50),
-//     drawer, 
-//     NumberUtils.getRandomInt(10, 1000), 
-//     "#6ee7b7"
-//   );
-
-//   newObj.setElascticity(NumberUtils.getRandomInt(0,3))
-
-//   balls.push(newObj);
-// }
-// balls.push(playerBall)
 
 
 // -- walls ---
 const walls: Wall[] = [];
-walls.push(new Wall(new Vector(200, 200), new Vector(400, 300), drawer, controller));
+// walls.push(new Wall(new Vector(200, 200), new Vector(400, 300), drawer, controller));
 walls.push(
   new Wall(new Vector(0, 0), new Vector(0, canvas.clientHeight), drawer),
   new Wall(new Vector(0, 0), new Vector(canvas.clientWidth, 0), drawer),
   new Wall(new Vector(0, canvas.clientHeight), new Vector(canvas.clientWidth, canvas.clientHeight), drawer),
   new Wall(new Vector(canvas.clientWidth, 0), new Vector(canvas.clientWidth, canvas.clientHeight), drawer),
 )
+
+// -- capsules --
+const capsules: Capsule[] = [];
+const playerCapsule = new Capsule(
+  new Vector(200, 300),
+  new Vector(400, 200),
+  30,
+  drawer, controller
+);
+capsules.push(playerCapsule);
 
 
 function mainLoop(timeStamp: number){
@@ -79,6 +74,12 @@ function mainLoop(timeStamp: number){
     w.draw()
   })
 
+  // draw capsules
+  capsules.forEach(c => {
+    c.move()
+    c.draw()
+
+  })
 
   // // draw distance wall
   // walls[0].closestPosintBallandWall(playerBall)
