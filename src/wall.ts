@@ -1,20 +1,22 @@
 import { Ball } from "./ball";
 import { Controller } from "./controller";
 import { Drawer } from "./drawer";
+import { LineSegment, LineSegmentLike } from "./line-segment";
 import { Matrix } from "./matrix";
 import { Vector } from "./vector";
 
 
 
-export class Wall {
+export class Wall implements LineSegmentLike{
 
-  public direction = {
+  public directionMovement = {
     up: false,
     down: false,
     right: false,
     left: false
   }
 
+  public direction: Vector;
   public center: Vector;
   public length: number;
   public angle: number = 0;
@@ -34,7 +36,7 @@ export class Wall {
 
     this.center = this.start.add(this.end).mult(0.5);
     this.length = this.end.subtr(this.start).mag();
-
+    this.direction = this.end.subtr(this.start).unit();
 
     this.refStart = this.start.newInstance();
     this.refEnd = this.end.newInstance();
@@ -61,20 +63,20 @@ export class Wall {
       return;
     }
 
-    this.controller.onDown(() => this.direction.down = true);
-    this.controller.onUp(() => this.direction.up = true);
-    this.controller.onRight(() => this.direction.right = true);
-    this.controller.onLeft(() => this.direction.left = true);
+    this.controller.onDown(() => this.directionMovement.down = true);
+    this.controller.onUp(() => this.directionMovement.up = true);
+    this.controller.onRight(() => this.directionMovement.right = true);
+    this.controller.onLeft(() => this.directionMovement.left = true);
 
-    this.controller.onReleaseDown(() => this.direction.down = false);
-    this.controller.onReleaseUp(() => this.direction.up = false);
-    this.controller.onReleaseRight(() => this.direction.right = false);
-    this.controller.onReleaseLeft(() => this.direction.left = false);
+    this.controller.onReleaseDown(() => this.directionMovement.down = false);
+    this.controller.onReleaseUp(() => this.directionMovement.up = false);
+    this.controller.onReleaseRight(() => this.directionMovement.right = false);
+    this.controller.onReleaseLeft(() => this.directionMovement.left = false);
   }
 
   private keyControl(){
-    if(this.direction.left) this.angleVelocity -= 0.05;
-    if(this.direction.right) this.angleVelocity += 0.05;
+    if(this.directionMovement.left) this.angleVelocity -= 0.05;
+    if(this.directionMovement.right) this.angleVelocity += 0.05;
   }
 
   private reposition(){
@@ -102,19 +104,7 @@ export class Wall {
   }
 
   static closestPosintBallandWall(ball: Ball, wall: Wall){
-    let ballToWallStart = wall.start.subtr(ball.getPosition())
-    if(Vector.dot(wall.wallUnit(), ballToWallStart) > 0){
-      return wall.startPosition;
-    }
-
-    let ballToWallEnd = ball.getPosition().subtr(wall.endPosition)
-    if(Vector.dot(wall.wallUnit(), ballToWallEnd) > 0){
-      return wall.endPosition;
-    }
-
-    let closestDistance = Vector.dot(wall.wallUnit(), ballToWallStart);
-    let closestVector = wall.wallUnit().mult(closestDistance);
-    return wall.startPosition.subtr(closestVector);
+    return LineSegment.colsestPointPositionToLineSegment(ball.getPosition(), wall)
   }
 
   closestPosintBallandWall(ball: Ball){

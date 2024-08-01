@@ -74,10 +74,16 @@ export class CanvasDrawer implements Drawer{
     this.ctx.arc(startX, startY, radius, refAngle + angle +  Math.PI / 2, refAngle + angle + 3 * Math.PI / 2);
     this.ctx.arc(endX, endY, radius, refAngle + angle - Math.PI / 2, refAngle + angle + Math.PI / 2);
     this.ctx.closePath();
-    this.ctx.strokeStyle = strokeColor ?? "black";
-    this.ctx.stroke();
-    this.ctx.fillStyle = fillColor ?? "lightGreen";
-    this.ctx.fill();
+
+    if(strokeColor !== "none"){
+      this.ctx.strokeStyle = strokeColor ?? "black";
+      this.ctx.stroke();
+    }
+
+    if(fillColor !== "none"){
+      this.ctx.fillStyle = fillColor ?? "lightGreen";
+      this.ctx.fill();
+    }
   }
 
 }

@@ -34,9 +34,10 @@ const capsules: Capsule[] = [];
 const playerCapsule = new Capsule(
   new Vector(200, 300),
   new Vector(400, 200),
-  30,
+  20,
   drawer, controller
 );
+capsules.push(new Capsule(new Vector(150, 50), new Vector(150, 300), 30, drawer));
 capsules.push(playerCapsule);
 
 

@@ -1,9 +1,10 @@
 import { Controller } from "./controller";
 import { Drawer } from "./drawer";
+import { LineSegment, LineSegmentLike } from "./line-segment";
 import { Matrix } from "./matrix";
 import {Vector} from "./vector"
 
-export class Capsule{
+export class Capsule implements LineSegmentLike{
 
   private _start: Vector
   private _end: Vector;
@@ -18,10 +19,10 @@ export class Capsule{
   private _angleVelocity: number;
   private _velocity = new Vector(0,0);
   private _acceleration = new Vector(0,0);
-  private _mass: number = 10;
   private _accelerationIncrement = 1;
   private _friction = 0.1
-  private _elasticity = 0.5;
+  // private _mass: number = 10;
+  // private _elasticity = 0.5;
 
   public directionMovement = {
     up: false,
@@ -58,6 +59,18 @@ export class Capsule{
 
     this.registerController()
   }
+
+  public get start(){ return this._start}
+  public set start(s: Vector){ this.start = s}
+
+  public get end(){return this._end}
+  public set end(e: Vector){this._end = e}
+
+  public get radius(){return this._rad}
+  public set radius(r: number){this._rad = r}
+
+  public get direction(){return this._direction}
+  public set direction(d: Vector){this._direction = d}
 
   registerController(){
     console.log("registering controller");
@@ -111,6 +124,16 @@ export class Capsule{
     this._end = this._position.add(this._direction.mult(this._length / 2));
   }
 
+  // line segment of closest point of certain position with capsule line
+  static closestPointPositionToCapsuleLine(position: Vector, capsule: Capsule){
+    return LineSegment.colsestPointPositionToLineSegment(position, capsule);
+  }
+
+  closestPointPositionToCapsuleLine(position: Vector){
+    return Capsule.closestPointPositionToCapsuleLine(position, this);
+  }
+
+
   move(){
     this.keyControl();
     this.reposition();
@@ -125,6 +148,14 @@ export class Capsule{
       this._rad,
       this._angle,
       this._refAngle,
+      "none"
+    )
+
+    this._drawer.drawLine(
+      this._start.x,
+      this._start.y,
+      this._end.x,
+      this._end.y,
     )
   }
 
