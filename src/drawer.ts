@@ -10,7 +10,8 @@ export interface Drawer{
     radius: number, 
     startAngle?: number, 
     endAngle?: number, 
-    color?: string
+    color?: string,
+    strokeColor?: string
   ): void;
 
   drawCapsule(
@@ -48,14 +49,20 @@ export class CanvasDrawer implements Drawer{
     this.ctx.stroke();
     this.ctx.closePath()
   }
-  drawCircle(x: number, y: number, radius: number, startAngle?: number, endAngle?: number, color?: string): void {
+  drawCircle(x: number, y: number, radius: number, startAngle?: number, endAngle?: number, color?: string, strokeColor?: string): void {
 
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, startAngle ?? 0, endAngle ?? 2 * Math.PI);
-    this.ctx.strokeStyle = "black";
-    this.ctx.stroke();
-    this.ctx.fillStyle = color ??"red";
-    this.ctx.fill();
+
+    if(strokeColor !== "none"){
+      this.ctx.strokeStyle = strokeColor ?? "black";
+      this.ctx.stroke();
+    }
+
+    if(color !== "none"){
+      this.ctx.fillStyle = color ??"red";
+      this.ctx.fill();
+    }
     this.ctx.closePath();
   }
 

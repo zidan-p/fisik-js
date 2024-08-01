@@ -104,7 +104,7 @@ export class Wall implements LineSegmentLike{
   }
 
   static closestPosintBallandWall(ball: Ball, wall: Wall){
-    return LineSegment.colsestPointPositionToLineSegment(ball.getPosition(), wall)
+    return LineSegment.closestPointPositionToLineSegment(ball.getPosition(), wall)
   }
 
   closestPosintBallandWall(ball: Ball){

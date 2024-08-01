@@ -126,7 +126,7 @@ export class Capsule implements LineSegmentLike{
 
   // line segment of closest point of certain position with capsule line
   static closestPointPositionToCapsuleLine(position: Vector, capsule: Capsule){
-    return LineSegment.colsestPointPositionToLineSegment(position, capsule);
+    return LineSegment.closestPointPositionToLineSegment(position, capsule);
   }
 
   closestPointPositionToCapsuleLine(position: Vector){

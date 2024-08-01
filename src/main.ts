@@ -2,6 +2,7 @@ import { Ball } from './ball';
 import { Capsule } from './capsule';
 import { HTMLElementController } from './controller';
 import { CanvasDrawer } from './drawer';
+import { LineSegment } from './line-segment';
 import './style.css'
 import { NumberUtils } from './util';
 import { Vector } from './vector';
@@ -81,6 +82,9 @@ function mainLoop(timeStamp: number){
     c.draw()
 
   })
+
+  // drae helper
+  LineSegment.previewClosesPoint(drawer, capsules[0], capsules[1]);
 
   // // draw distance wall
   // walls[0].closestPosintBallandWall(playerBall)
