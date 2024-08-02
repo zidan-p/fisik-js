@@ -9,17 +9,17 @@ import { Vector } from "./vector";
 
 export class Ball {
   
-  private position: Vector;
-  private radius: number;
+  private _position: Vector;
+  private _radius: number;
   private color: string;
 
-  private velocity = new Vector(0,0);
+  private _velocity = new Vector(0,0);
   private acceleration = new Vector(0,0);
   private mass: number;
   private inverseMass!: number;
   private accelerationIncrement = 1;
   private friction = 0.1
-  private elasticity = 0.5;
+  private _elasticity = 0.5;
   
   private drawer: Drawer;
   private controller?: Controller;
@@ -44,8 +44,8 @@ export class Ball {
     controller?: Controller,
   ){
     this.mass = mass ?? 100;
-    this.position = position;
-    this.radius = radius
+    this._position = position;
+    this._radius = radius
     this.drawer = drawer;
     this.color = color ?? "#dc2626";
     this.controller = controller;
@@ -54,17 +54,29 @@ export class Ball {
     if(this.controller) this.registerController();
   }
 
-  public getPosition (){return this.position}
-  public setPosition(pos: Vector) {this.position = pos};
+  public get position (){return this._position}
+  public set position(pos: Vector) {this._position = pos};
 
-  public getRadius() {return this.radius}
-  public setRadius(r: number){ this.radius = r}
+  public get radius() {return this._radius}
+  public set radius(r: number){ this._radius = r}
 
-  public setElascticity(n: number) {this.elasticity = n}
-  public getElasticity(){return this.elasticity}
+  public set elascticity(n: number) {this._elasticity = n}
+  public get elasticity(){return this._elasticity}
 
-  public getVelocity(){return this.velocity}
-  public setVelocity(v: Vector){this.velocity = v}
+  public get velocity(){return this._velocity}
+  public set velocity(v: Vector){this._velocity = v}
+
+  public getPosition (){return this._position}
+  public setPosition(pos: Vector) {this._position = pos};
+
+  public getRadius() {return this._radius}
+  public setRadius(r: number){ this._radius = r}
+
+  public setElascticity(n: number) {this._elasticity = n}
+  public getElasticity(){return this._elasticity}
+
+  public getVelocity(){return this._velocity}
+  public setVelocity(v: Vector){this._velocity = v}
 
   /** 
    * TODO: find out why should inverse mass should be zero when the mass is zero?
@@ -121,9 +133,9 @@ export class Ball {
 
   reposition(){
     this.acceleration = this.acceleration.unit().mult(this.accelerationIncrement);
-    this.velocity = this.velocity.add(this.acceleration);
-    this.velocity = this.velocity.mult(1 - this.friction);
-    this.position = this.position.add(this.velocity);
+    this._velocity = this._velocity.add(this.acceleration);
+    this._velocity = this._velocity.mult(1 - this.friction);
+    this._position = this._position.add(this._velocity);
   }
 
   move(){
@@ -132,44 +144,44 @@ export class Ball {
   }
 
   draw(){
-    this.drawer.drawCircle(this.position.x, this.position.y, this.radius, undefined, undefined, this.color);
+    this.drawer.drawCircle(this._position.x, this._position.y, this._radius, undefined, undefined, this.color);
 
     // also draw vector helper
-    Vector.drawViewLine(this.position, this.acceleration, 50, this.drawer, "green");
-    Vector.drawViewLine(this.position, this.velocity, 15, this.drawer, "red");
+    Vector.drawViewLine(this._position, this.acceleration, 50, this.drawer, "green");
+    Vector.drawViewLine(this._position, this._velocity, 15, this.drawer, "red");
 
     // add stat of ball
-    this.drawer.fillText("M : " + this.mass, this.position.x - 10, this.position.y - 5);
-    this.drawer.fillText("E : " + this.elasticity, this.position.x - 10, this.position.y + 5);
+    this.drawer.fillText("M : " + this.mass, this._position.x - 10, this._position.y - 5);
+    this.drawer.fillText("E : " + this._elasticity, this._position.x - 10, this._position.y + 5);
   }
 
 
-  static collisionDetection(ball1: Ball, ball2: Ball){
+  static collisionDetectionBetweenBall(ball1: Ball, ball2: Ball){
     if(ball1.getRadius() + ball2.getRadius() >= ball2.getPosition().subtr(ball1.getPosition()).mag()) return true;
     return false;
   }
 
-  collisionDetection(ball: Ball){
-    return Ball.collisionDetection(this, ball)
+  collisionDetectionBetweenBall(ball: Ball){
+    return Ball.collisionDetectionBetweenBall(this, ball)
   }
 
 
-  static penetrationResolution(ball1: Ball, ball2: Ball){
+  static penetrationResolutionBetweenBall(ball1: Ball, ball2: Ball){
     const distance = ball1.getPosition().subtr(ball2.getPosition());
     const penetrationDepth = ball1.getRadius() + ball2.getRadius() - distance.mag();
-    const penetrationResolution = distance.unit().mult(penetrationDepth / (ball1.getInverseMass() + ball2.getInverseMass()));
-    ball1.setPosition(ball1.getPosition().add(penetrationResolution.mult(ball1.getInverseMass())));
-    ball2.setPosition(ball2.getPosition().add(penetrationResolution.mult(-ball2.getInverseMass())));
+    const penetrationResolutionBetweenBall = distance.unit().mult(penetrationDepth / (ball1.getInverseMass() + ball2.getInverseMass()));
+    ball1.setPosition(ball1.getPosition().add(penetrationResolutionBetweenBall.mult(ball1.getInverseMass())));
+    ball2.setPosition(ball2.getPosition().add(penetrationResolutionBetweenBall.mult(-ball2.getInverseMass())));
   }
 
-  penetrationResolution(ball: Ball){
-    Ball.penetrationResolution(this, ball);
+  penetrationResolutionBetweenBall(ball: Ball){
+    Ball.penetrationResolutionBetweenBall(this, ball);
   }
 
   
-  static collisionResultion(ball1: Ball, ball2: Ball){
+  static collisionResolutionBetweenBall(ball1: Ball, ball2: Ball){
     const normal = ball1.getPosition().subtr(ball2.getPosition()).unit();
-    const relativeVelocity = ball1.velocity.subtr(ball2.velocity);
+    const relativeVelocity = ball1._velocity.subtr(ball2._velocity);
     const separatingVelocity = Vector.dot(relativeVelocity, normal);
     const newSeparatingVelocity = -separatingVelocity * Math.min(ball2.getElasticity(), ball1.getElasticity()); //elsaticity implementation
 
@@ -177,13 +189,13 @@ export class Ball {
     const impulse = separatingVelocityDifference / (ball1.getInverseMass() + ball2.getInverseMass());
     const impulseVelocity = normal.mult(impulse);
     
-    ball1.velocity = ball1.velocity.add(impulseVelocity.mult(ball1.getInverseMass()));
-    ball2.velocity = ball2.velocity.add(impulseVelocity.mult(-ball2.getInverseMass()));
+    ball1._velocity = ball1._velocity.add(impulseVelocity.mult(ball1.getInverseMass()));
+    ball2._velocity = ball2._velocity.add(impulseVelocity.mult(-ball2.getInverseMass()));
   }
 
 
-  collisionResolution(ball: Ball){
-    Ball.collisionResultion(this, ball);
+  collisionResolutionBetweenBall(ball: Ball){
+    Ball.collisionResolutionBetweenBall(this, ball);
   }
 }
 

@@ -1,13 +1,13 @@
 import { Ball } from "./ball";
 import { Controller } from "./controller";
 import { Drawer } from "./drawer";
-import { LineSegment, LineSegmentLike } from "./line-segment";
+import { LineSegment } from "./line-segment";
 import { Matrix } from "./matrix";
 import { Vector } from "./vector";
 
 
 
-export class Wall implements LineSegmentLike{
+export class Wall implements LineSegment{
 
   public directionMovement = {
     up: false,

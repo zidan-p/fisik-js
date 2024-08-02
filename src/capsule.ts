@@ -1,10 +1,10 @@
 import { Controller } from "./controller";
 import { Drawer } from "./drawer";
-import { LineSegment, LineSegmentLike } from "./line-segment";
+import { LineSegment } from "./line-segment";
 import { Matrix } from "./matrix";
 import {Vector} from "./vector"
 
-export class Capsule implements LineSegmentLike{
+export class Capsule implements LineSegment{
 
   private _start: Vector
   private _end: Vector;
@@ -21,8 +21,9 @@ export class Capsule implements LineSegmentLike{
   private _acceleration = new Vector(0,0);
   private _accelerationIncrement = 1;
   private _friction = 0.1
-  // private _mass: number = 10;
-  // private _elasticity = 0.5;
+  private _mass: number = 10;
+  private _inverseMass!: number;
+  private _elasticity = 0.5;
 
   public directionMovement = {
     up: false,
@@ -36,12 +37,13 @@ export class Capsule implements LineSegmentLike{
   private _controller?: Controller
 
 
-  constructor(start: Vector,end: Vector,rad: number, drawer: Drawer, controller?: Controller){
+  constructor(start: Vector,end: Vector,rad: number, mass: number,drawer: Drawer, controller?: Controller){
     this._start = start;
     this._end = end;
     this._rad = rad;
     this._position = this._start.add(this._end).mult(0.5);
     this._length = this._end.subtr(this._start).mag();
+    this.mass = mass;
 
     this._angle = 0;
     this._angleVelocity = 0;
@@ -60,6 +62,15 @@ export class Capsule implements LineSegmentLike{
     this.registerController()
   }
 
+  public get position (){return this._position}
+  public set position(pos: Vector) {this._position = pos};
+
+  public set elasticity(n: number) {this._elasticity = n}
+  public get elasticity(){return this._elasticity}
+
+  public get velocity(){return this._velocity}
+  public set velocity(v: Vector){this._velocity = v}
+
   public get start(){ return this._start}
   public set start(s: Vector){ this.start = s}
 
@@ -71,6 +82,17 @@ export class Capsule implements LineSegmentLike{
 
   public get direction(){return this._direction}
   public set direction(d: Vector){this._direction = d}
+
+  public set inverseMass(n: number){n === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass}
+
+  public get inverseMass(){return this._inverseMass}
+
+  public set mass(n: number){
+    this._mass = n;
+    this.inverseMass = (n);
+  }
+  public getMass(){return this._mass};
+
 
   registerController(){
     console.log("registering controller");
@@ -133,6 +155,56 @@ export class Capsule implements LineSegmentLike{
     return Capsule.closestPointPositionToCapsuleLine(position, this);
   }
 
+
+  static collisionDetectionBetweenCapsules(cap1: Capsule, cap2: Capsule){
+    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1, cap2);
+    if(cap1.radius + cap2.radius >= closestPoint[0].subtr(closestPoint[1]).mag())
+      return true;
+    return false;
+  }
+
+  collisionDetectionBetweenCapsules(cap: Capsule){
+    return Capsule.collisionDetectionBetweenCapsules(this, cap);
+  }
+
+  static penetrationResolutionBetweenCapsules(cap1: Capsule, cap2: Capsule){
+    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1, cap2);
+
+    const distance = closestPoint[0].subtr(closestPoint[1]);
+
+    const penetrationDepth = cap1.radius + cap2.radius - distance.mag();
+
+    const penetrationResolution = distance.unit().mult(penetrationDepth / (cap1.inverseMass + cap2.inverseMass));
+
+    cap1.position = cap1.position.add(penetrationResolution.mult(cap1.inverseMass));
+    cap2.position = cap2.position.add(penetrationResolution.mult(-cap2.inverseMass));
+  }
+
+  penetrationResolutionBetweenCapsules(capsule: Capsule){
+    Capsule.penetrationResolutionBetweenCapsules(this, capsule);
+  }
+
+  
+  static collisionResolutionBetweenCapsules(cap1: Capsule, cap2: Capsule){
+    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1, cap2);
+
+    const normal = closestPoint[0].subtr(closestPoint[1]).unit();
+    const relativeVelocity = cap1.velocity.subtr(cap2.velocity);
+    const separatingVelocity = Vector.dot(relativeVelocity, normal);
+    const newSeparatingVelocity = -separatingVelocity * Math.min(cap2.elasticity, cap1.elasticity); //elsaticity implementation
+
+    const separatingVelocityDifference = newSeparatingVelocity - separatingVelocity;
+    const impulse = separatingVelocityDifference / (cap1.inverseMass + cap2.inverseMass);
+    const impulseVelocity = normal.mult(impulse);
+    
+    cap1.velocity = cap1.velocity.add(impulseVelocity.mult(cap1.inverseMass));
+    cap2.velocity = cap2.velocity.add(impulseVelocity.mult(-cap2.inverseMass));
+  }
+
+
+  collisionResolutionBetweenCapsules(capsule: Capsule){
+    Capsule.collisionResolutionBetweenCapsules(this, capsule);
+  }
 
   move(){
     this.keyControl();

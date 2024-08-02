@@ -49,7 +49,15 @@ export class CanvasDrawer implements Drawer{
     this.ctx.stroke();
     this.ctx.closePath()
   }
-  drawCircle(x: number, y: number, radius: number, startAngle?: number, endAngle?: number, color?: string, strokeColor?: string): void {
+  drawCircle(
+    x: number, 
+    y: number, 
+    radius: number, 
+    startAngle?: number, 
+    endAngle?: number, 
+    color?: string, 
+    strokeColor?: string
+  ): void {
 
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, startAngle ?? 0, endAngle ?? 2 * Math.PI);

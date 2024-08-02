@@ -2,17 +2,14 @@ import { Drawer } from "./drawer";
 import { Vector } from "./vector";
 
 
-export interface LineSegmentLike{
-  start: Vector;
-  end: Vector;
-  direction: Vector
-}
+export abstract class LineSegment {
 
-export class LineSegment {
-
+  abstract start: Vector;
+  abstract end: Vector;
+  abstract direction: Vector
 
   // line segment of closest point of certain position with capsule line
-  static closestPointPositionToLineSegment(position: Vector, wallLike: LineSegmentLike){
+  static closestPointPositionToLineSegment(position: Vector, wallLike: LineSegment){
     let ballToWallStart = wallLike.start.subtr(position)
     if(Vector.dot(wallLike.direction, ballToWallStart) > 0){
       return wallLike.start;
@@ -29,7 +26,7 @@ export class LineSegment {
   }
 
 
-  static closestPointBetweenLineSegemnt(ls1: LineSegmentLike, ls2: LineSegmentLike){
+  static closestPointBetweenLineSegemnt(ls1: LineSegment, ls2: LineSegment){
     let shortestDistance = LineSegment.closestPointPositionToLineSegment(ls1.start, ls2)
       .subtr(ls1.start).mag();
     let closestPoint = [ls1.start, LineSegment.closestPointPositionToLineSegment(ls1.start, ls2)];
@@ -52,7 +49,7 @@ export class LineSegment {
     return closestPoint;
   }
 
-  static previewClosesPoint(drawer: Drawer, ls1: LineSegmentLike, ls2: LineSegmentLike){
+  static previewClosesPoint(drawer: Drawer, ls1: LineSegment, ls2: LineSegment){
     const closestPoints = LineSegment.closestPointBetweenLineSegemnt(ls1, ls2);
 
     drawer.drawLine(
