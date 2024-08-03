@@ -23,6 +23,8 @@ export class Capsule implements LineSegment{
   private _friction = 0.1
   private _mass: number = 10;
   private _inverseMass!: number;
+  private _inertia!: number;
+  private _inverseInertia!: number;
   private _elasticity = 0.5;
 
   public directionMovement = {
@@ -43,7 +45,11 @@ export class Capsule implements LineSegment{
     this._rad = rad;
     this._position = this._start.add(this._end).mult(0.5);
     this._length = this._end.subtr(this._start).mag();
+
+    // becarefull, some of initializer properties happened here.
+    // make sure dependent props already defined.
     this.mass = mass;
+
 
     this._angle = 0;
     this._angleVelocity = 0;
@@ -74,6 +80,10 @@ export class Capsule implements LineSegment{
   public get start(){ return this._start}
   public set start(s: Vector){ this.start = s}
 
+  public get angleVelocity(){return this._angleVelocity}
+  public set angleVelocity(n: number){this._angleVelocity = n}
+
+
   public get end(){return this._end}
   public set end(e: Vector){this._end = e}
 
@@ -83,13 +93,37 @@ export class Capsule implements LineSegment{
   public get direction(){return this._direction}
   public set direction(d: Vector){this._direction = d}
 
-  public set inverseMass(n: number){n === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass}
-
+  public set inverseMass(n: number){this._inverseMass = n}
   public get inverseMass(){return this._inverseMass}
+  public setDefaultInverseMass(){
+    this.mass === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass
+  }
+  
+
+  /** default using mass value */
+  public set inertia(inert: number){this._inertia = inert;}
+  public setDefaultInertia(){
+    this._inertia = this.mass * (this._rad**2 + (this._length + 2 * this._rad)**2 ) / 12;
+  }
+  public get inertia(){return this._inertia}
+
+  public get inverseInertia(){return this._inverseInertia}
+  public set inverseInertia(n: number){this._inverseInertia = n}
+  public setDefaultInverseInertia(){
+    if(this.mass === 0){
+      this._inverseInertia = 0;
+      return;
+    }
+
+    this._inverseInertia = 1 / this._inertia;
+  }
 
   public set mass(n: number){
     this._mass = n;
-    this.inverseMass = (n);
+    
+    this.setDefaultInverseMass();
+    this.setDefaultInertia();
+    this.setDefaultInverseInertia();
   }
   public getMass(){return this._mass};
 
@@ -189,16 +223,41 @@ export class Capsule implements LineSegment{
     const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1, cap2);
 
     const normal = closestPoint[0].subtr(closestPoint[1]).unit();
-    const relativeVelocity = cap1.velocity.subtr(cap2.velocity);
+
+    // closing velocity
+    const collisionArm1 = closestPoint[0].subtr(cap1.position).add(normal.mult(cap1.radius));
+    const rotationVelocity1 = new Vector(-cap1.angleVelocity * collisionArm1.y, cap1.angleVelocity * collisionArm1.x);
+    const closingVelocity1 = cap1.velocity.add(rotationVelocity1);
+
+    const collisionArm2 = closestPoint[1].subtr(cap2.position).add(normal.mult(-cap2.radius));
+    const rotationVelocity2 = new Vector(-cap2.angleVelocity * collisionArm2.y, cap2.angleVelocity * collisionArm2.x);
+    const closingVelocity2 = cap2.velocity.add(rotationVelocity2);
+
+
+    // 2. impulse augmentation
+    let impulseAugmentation1 = Vector.cross(collisionArm1, normal);
+    impulseAugmentation1 = impulseAugmentation1 * cap1.inverseInertia * impulseAugmentation1;
+    let impulseAugmentation2 = Vector.cross(collisionArm2, normal);
+    impulseAugmentation2 = impulseAugmentation2 * cap2.inverseInertia * impulseAugmentation2;
+
+    const relativeVelocity = closingVelocity1.subtr(closingVelocity2);
     const separatingVelocity = Vector.dot(relativeVelocity, normal);
     const newSeparatingVelocity = -separatingVelocity * Math.min(cap2.elasticity, cap1.elasticity); //elsaticity implementation
 
     const separatingVelocityDifference = newSeparatingVelocity - separatingVelocity;
-    const impulse = separatingVelocityDifference / (cap1.inverseMass + cap2.inverseMass);
+
+    const impulse = 
+      separatingVelocityDifference / 
+      (cap1.inverseMass + cap2.inverseMass + impulseAugmentation1 + impulseAugmentation2);
+    
     const impulseVelocity = normal.mult(impulse);
     
+    // 3. changing the velocities
     cap1.velocity = cap1.velocity.add(impulseVelocity.mult(cap1.inverseMass));
     cap2.velocity = cap2.velocity.add(impulseVelocity.mult(-cap2.inverseMass));
+
+    cap1.angleVelocity += cap1.inverseInertia * Vector.cross(collisionArm1, impulseVelocity);
+    cap2.angleVelocity -= cap2.inverseInertia * Vector.cross(collisionArm2, impulseVelocity);
   }
 
 

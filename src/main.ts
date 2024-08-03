@@ -35,7 +35,7 @@ const capsules: Capsule[] = [];
 const playerCapsule = new Capsule(
   new Vector(200, 300),
   new Vector(400, 200),
-  20, 3,
+  20, 10,
   drawer, controller
 );
 capsules.push(new Capsule(new Vector(100, 50), new Vector(100, 300), 30,2, drawer));
@@ -88,7 +88,7 @@ function mainLoop(timeStamp: number){
       if(c.collisionDetectionBetweenCapsules(capsules[i])){
         ctx.fillText("Collide", 500, 400);
         Capsule.penetrationResolutionBetweenCapsules(capsules[index], capsules[i])
-        // Capsule.collisionResolutionBetweenCapsules(capsules[index], capsules[i])
+        Capsule.collisionResolutionBetweenCapsules(capsules[index], capsules[i])
         // c.penetrationResolutionBetweenCapsules(capsules[i]);
         // c.collisionResolutionBetweenCapsules(capsules[i]);
       }
