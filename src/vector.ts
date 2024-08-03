@@ -38,6 +38,8 @@ export class Vector{
   /** new intance for this vector */
   newInstance(){return new Vector(this.x, this.y)}
 
+  static newInstance(vec: Vector){return new Vector(vec.x, vec.y)}
+
   //returns a perpendicular normal vector
   normal(){
     return new Vector(-this.y, this.x).unit();

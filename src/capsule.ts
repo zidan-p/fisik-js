@@ -103,7 +103,7 @@ export class Capsule implements LineSegment{
   /** default using mass value */
   public set inertia(inert: number){this._inertia = inert;}
   public setDefaultInertia(){
-    this._inertia = this._mass * (this._rad**2 + (this._length + 2 * this._rad)**2 ) / 12;
+    this._inertia = this._mass * ((2 * this._rad)**2 + (this._length + 2 * this._rad)**2 ) / 12;
   }
   public get inertia(){return this._inertia}
 

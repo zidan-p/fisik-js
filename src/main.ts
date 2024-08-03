@@ -1,4 +1,5 @@
 import { Ball } from './ball';
+import { Box } from './box';
 import { Capsule } from './capsule';
 import { HTMLElementController } from './controller';
 import { CanvasDrawer } from './drawer';
@@ -30,73 +31,36 @@ walls.push(
   new Wall(new Vector(canvas.clientWidth, 0), new Vector(canvas.clientWidth, canvas.clientHeight), drawer),
 )
 
-// -- capsules --
-const capsules: Capsule[] = [];
-const playerCapsule = new Capsule(
-  new Vector(200, 300),
-  new Vector(400, 200),
-  20, 10,
-  drawer, controller
-);
-capsules.push(new Capsule(new Vector(100, 50), new Vector(100, 300), 30,2, drawer));
-capsules.push(playerCapsule);
+const wall1 = new Wall(new Vector(300, 100), new Vector(200, 330), drawer);
+const wall2 = new Wall(new Vector(150, 300), new Vector(350, 300), drawer);
 
+// -- capsules --
+// const capsules: Capsule[] = [];
+// const playerCapsule = new Capsule(
+//   new Vector(200, 300),
+//   new Vector(400, 200),
+//   20, 10,
+//   drawer, controller
+// );
+// capsules.push(new Capsule(new Vector(100, 50), new Vector(100, 300), 30,2, drawer));
+// capsules.push(playerCapsule);
+
+const box = new Box(new Vector(100, 100), new Vector(200, 100), 40, 20, drawer, controller);
+const box2 = new Box(new Vector(100, 300), new Vector(200, 300), 40, 20, drawer, controller);
 
 function mainLoop(timeStamp: number){
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
+  box.draw();
+  box.move();
+  box2.draw();
+  box2.move();
+  // wall1.draw();
+  // wall2.draw();
 
-  // drawe balls
-  // balls.forEach((ball, index) => {
-  //   ball.draw();
-  //   ball.move();
-
-  //   // add collision for each ball to another
-  //   for(let i = index + 1; i < balls.length; i++){
-  //     if(balls[index].collisionDetection(balls[i])){ 
-  //       balls[index].penetrationResolution(balls[i]);
-  //       balls[index].collisionResolution(balls[i]);
-  //     }
-  //   }
-
-  //   // add collision ball and wall
-
-  //   walls.forEach(w => {
-  //     if(w.collisionDetectionBallAndWall(ball)){
-  //       w.penetrationResolutionBallAndWall(ball);
-  //       w.collisionResolutionBallAndWall(ball);
-  //     }
-  //     w.draw();
-  //   })
-
-  // });
-
-  
-  walls.forEach(w => {
-    w.move();
-    w.draw()
-  })
-  
-  // console.log(capsules[0].position);
-  // draw capsules
-  capsules.forEach((c, index) => {
-    c.move()
-    c.draw()
-
-    // add collision
-    for (let i = index + 1; i < capsules.length; i++) {
-      if(c.collisionDetectionBetweenCapsules(capsules[i])){
-        ctx.fillText("Collide", 500, 400);
-        Capsule.penetrationResolutionBetweenCapsules(capsules[index], capsules[i])
-        Capsule.collisionResolutionBetweenCapsules(capsules[index], capsules[i])
-        // c.penetrationResolutionBetweenCapsules(capsules[i]);
-        // c.collisionResolutionBetweenCapsules(capsules[i]);
-      }
-    }
-  })
-
-  // drae helper
-  LineSegment.previewClosesPoint(drawer, capsules[0], capsules[1]);
+  // if(LineSegment.sat(wall1, wall2)){
+  //   ctx.fillText("wall collision....", 500, 400);
+  // }
 
   // // draw distance wall
   // walls[0].closestPosintBallandWall(playerBall)

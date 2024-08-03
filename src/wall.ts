@@ -17,6 +17,7 @@ export class Wall implements LineSegment{
   }
 
   public direction: Vector;
+  public vertex: Vector[];
   public center: Vector;
   public length: number;
   public angle: number = 0;
@@ -37,6 +38,7 @@ export class Wall implements LineSegment{
     this.center = this.start.add(this.end).mult(0.5);
     this.length = this.end.subtr(this.start).mag();
     this.direction = this.end.subtr(this.start).unit();
+    this.vertex = [this.start, this.end]
 
     this.refStart = this.start.newInstance();
     this.refEnd = this.end.newInstance();
