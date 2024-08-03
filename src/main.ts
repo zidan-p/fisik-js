@@ -46,7 +46,7 @@ const wall2 = new Wall(new Vector(150, 300), new Vector(350, 300), drawer);
 // capsules.push(playerCapsule);
 
 const box = new Box(new Vector(100, 100), new Vector(200, 100), 40, 20, drawer, controller);
-const box2 = new Box(new Vector(100, 300), new Vector(200, 300), 40, 20, drawer, controller);
+const box2 = new Box(new Vector(100, 300), new Vector(200, 300), 40, 20, drawer);
 
 function mainLoop(timeStamp: number){
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
@@ -58,9 +58,9 @@ function mainLoop(timeStamp: number){
   // wall1.draw();
   // wall2.draw();
 
-  // if(LineSegment.sat(wall1, wall2)){
-  //   ctx.fillText("wall collision....", 500, 400);
-  // }
+  if(LineSegment.sat(box, box2)){
+    ctx.fillText("wall collision....", 500, 400);
+  }
 
   // // draw distance wall
   // walls[0].closestPosintBallandWall(playerBall)

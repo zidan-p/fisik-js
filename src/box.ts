@@ -93,6 +93,8 @@ export class Box  {
   public get angleVelocity(){return this._angleVelocity}
   public set angleVelocity(n: number){this._angleVelocity = n}
 
+  public get vertex(){return this._vertex};
+  public set vertex(v: [Vector, Vector, Vector, Vector]){this._vertex = v}
 
   public get end(){return this._end}
   public set end(e: Vector){this._end = e}

@@ -76,23 +76,34 @@ export abstract class LineSegment {
    * @param o2 
    */
   static sat(o1: LineSegment, o2: LineSegment){
-    const axes1 = o1.direction.normal();
-    const axes2 = o2.direction.normal();
+    const axes1 = []
+    const axes2 = [];
+
+    axes1.push(o1.direction.normal());
+    axes1.push(o1.direction);
+    axes2.push(o2.direction.normal())
+    axes2.push(o2.direction);
 
     let projection1: Projection;
     let projection2: Projection;
     let overlap: number;
 
-    projection1 = LineSegment.projectionShapeOntoAxis(axes1, o1);
-    projection2 = LineSegment.projectionShapeOntoAxis(axes1, o2);
-    overlap = Math.min(projection1.max, projection2.max) - Math.max(projection1.min, projection2.min);
-    if(overlap < 0) return false;
+    for (let index = 0; index < axes1.length; index++) {
+      projection1 = LineSegment.projectionShapeOntoAxis(axes1[index], o1);
+      projection2 = LineSegment.projectionShapeOntoAxis(axes1[index], o2);
+      overlap = Math.min(projection1.max, projection2.max) - Math.max(projection1.min, projection2.min);
+      if(overlap < 0) return false;
+    }
+
+    for (let index = 0; index < axes2.length; index++) {
+      projection1 = LineSegment.projectionShapeOntoAxis(axes2[index], o1);
+      projection2 = LineSegment.projectionShapeOntoAxis(axes2[index], o2);
+      overlap = Math.min(projection1.max, projection2.max) - Math.max(projection1.min, projection2.min);
+      if(overlap < 0) return false;
+      
+    }
+
     
-    projection1 = LineSegment.projectionShapeOntoAxis(axes2, o1);
-    projection2 = LineSegment.projectionShapeOntoAxis(axes2, o2);
-    overlap = Math.min(projection1.max, projection2.max) - Math.max(projection1.min, projection2.min);
-    // console.log("overlap axes2 : " + overlap);
-    if(overlap < 0) return false;
 
     return true;
   }
