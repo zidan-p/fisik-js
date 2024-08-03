@@ -103,7 +103,7 @@ export class Capsule implements LineSegment{
   /** default using mass value */
   public set inertia(inert: number){this._inertia = inert;}
   public setDefaultInertia(){
-    this._inertia = this.mass * (this._rad**2 + (this._length + 2 * this._rad)**2 ) / 12;
+    this._inertia = this._mass * (this._rad**2 + (this._length + 2 * this._rad)**2 ) / 12;
   }
   public get inertia(){return this._inertia}
 
@@ -112,17 +112,16 @@ export class Capsule implements LineSegment{
   public setDefaultInverseInertia(){
     if(this.mass === 0){
       this._inverseInertia = 0;
-      return;
+    } else {
+      this._inverseInertia = 1 / this._inertia;
     }
-
-    this._inverseInertia = 1 / this._inertia;
   }
 
   public set mass(n: number){
     this._mass = n;
     
     this.setDefaultInverseMass();
-    this.setDefaultInertia();
+    this.setDefaultInertia(); //it must first before inverse innertia
     this.setDefaultInverseInertia();
   }
   public getMass(){return this._mass};
@@ -234,9 +233,12 @@ export class Capsule implements LineSegment{
     const closingVelocity2 = cap2.velocity.add(rotationVelocity2);
 
 
+
     // 2. impulse augmentation
     let impulseAugmentation1 = Vector.cross(collisionArm1, normal);
     impulseAugmentation1 = impulseAugmentation1 * cap1.inverseInertia * impulseAugmentation1;
+
+
     let impulseAugmentation2 = Vector.cross(collisionArm2, normal);
     impulseAugmentation2 = impulseAugmentation2 * cap2.inverseInertia * impulseAugmentation2;
 
@@ -250,14 +252,16 @@ export class Capsule implements LineSegment{
       separatingVelocityDifference / 
       (cap1.inverseMass + cap2.inverseMass + impulseAugmentation1 + impulseAugmentation2);
     
+
     const impulseVelocity = normal.mult(impulse);
-    
+
     // 3. changing the velocities
     cap1.velocity = cap1.velocity.add(impulseVelocity.mult(cap1.inverseMass));
     cap2.velocity = cap2.velocity.add(impulseVelocity.mult(-cap2.inverseMass));
 
     cap1.angleVelocity += cap1.inverseInertia * Vector.cross(collisionArm1, impulseVelocity);
     cap2.angleVelocity -= cap2.inverseInertia * Vector.cross(collisionArm2, impulseVelocity);
+
   }
 
 
