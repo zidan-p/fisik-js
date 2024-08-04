@@ -11,6 +11,7 @@ export class Vector{
     public y: number
   ){}
 
+  toString(){return "x :: " + this.x + ", y :: " + this.y}
 
   add(v: Vector){
     return new Vector(this.x + v.x, this.y + v.y);

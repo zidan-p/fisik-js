@@ -1,9 +1,11 @@
 import { Drawer } from "./drawer";
+import { drawer } from "./main";
 import { Vector } from "./vector";
 
 export interface Projection {
   min: number;
   max: number;
+  collisionVertex: Vector;
 }
 
 export abstract class LineSegment {
@@ -54,6 +56,17 @@ export abstract class LineSegment {
     return closestPoint;
   }
 
+  static findAxes(ls1: LineSegment, ls2: LineSegment){
+    const axes: Vector[] = [];
+
+    axes.push(ls1.direction.normal());
+    axes.push(ls1.direction);
+    axes.push(ls2.direction.normal())
+    axes.push(ls2.direction);
+
+    return axes;
+  }
+
 
   static projectionShapeOntoAxis(axis: Vector, object: LineSegment): Projection{
     if(!object?.vertex) throw new Error("object + " + object?.constructor.name + " doesn't has the vertex" );
@@ -61,13 +74,18 @@ export abstract class LineSegment {
     let min = Vector.dot(axis, object.vertex[0]);
     let max = min;
 
+    let collisionVertex = object.vertex[0]; 
+
     for (let i = 0; i < object.vertex.length; i++) {
       let p = Vector.dot(axis, object.vertex[i]);
-      if(p < min) min = p;
+      if(p < min) {
+        min = p;
+        collisionVertex = object.vertex[i];
+      }
       if(p > max) max = p;
     }
 
-    return {min, max}
+    return {min, max, collisionVertex}
   }
 
   /**
@@ -76,34 +94,55 @@ export abstract class LineSegment {
    * @param o2 
    */
   static sat(o1: LineSegment, o2: LineSegment){
-    const axes1 = []
-    const axes2 = [];
+    let minOverlap: null | number = null;
+    let smallestAxis: Vector;
+    let vertexObject : LineSegment;
 
-    axes1.push(o1.direction.normal());
-    axes1.push(o1.direction);
-    axes2.push(o2.direction.normal())
-    axes2.push(o2.direction);
+    const axes = LineSegment.findAxes(o1, o2);
 
     let projection1: Projection;
     let projection2: Projection;
     let overlap: number;
 
-    for (let index = 0; index < axes1.length; index++) {
-      projection1 = LineSegment.projectionShapeOntoAxis(axes1[index], o1);
-      projection2 = LineSegment.projectionShapeOntoAxis(axes1[index], o2);
+    for (let index = 0; index < axes.length; index++) {
+      projection1 = LineSegment.projectionShapeOntoAxis(axes[index], o1);
+      projection2 = LineSegment.projectionShapeOntoAxis(axes[index], o2);
       overlap = Math.min(projection1.max, projection2.max) - Math.max(projection1.min, projection2.min);
       if(overlap < 0) return false;
+
+      if(
+        (projection1.max > projection2.max && projection1.min < projection2.min) ||
+        (projection1.max < projection2.max && projection1.min > projection2.min)
+      ){
+        const mins = Math.abs(projection1.min - projection2.min);
+        const maxs = Math.abs(projection1.max - projection2.max);
+        if(mins < maxs){
+          overlap += mins;
+        } else {
+          overlap += maxs;
+          axes[index] = axes[index].mult(-1);
+        }
+      }
+
+      // number of null is 0
+      if(overlap < Number(minOverlap) || minOverlap === null){
+        minOverlap = overlap;
+        smallestAxis = axes[index];
+        
+        if(index < 2){
+          vertexObject = o2;
+          if(projection1.max > projection2.max) smallestAxis = axes[index].mult(-1);
+        }else{
+          vertexObject = o1;
+          if(projection1.max < projection2.max) smallestAxis = axes[index].mult(-1);
+        }
+      }
     }
 
-    for (let index = 0; index < axes2.length; index++) {
-      projection1 = LineSegment.projectionShapeOntoAxis(axes2[index], o1);
-      projection2 = LineSegment.projectionShapeOntoAxis(axes2[index], o2);
-      overlap = Math.min(projection1.max, projection2.max) - Math.max(projection1.min, projection2.min);
-      if(overlap < 0) return false;
-      
-    }
 
-    
+    // beware !!!
+    const contactVertex = LineSegment.projectionShapeOntoAxis(smallestAxis!, vertexObject!).collisionVertex;
+    smallestAxis!.drawViewLineToThisVector(contactVertex, minOverlap!, drawer ,"blue");
 
     return true;
   }

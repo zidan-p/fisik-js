@@ -13,7 +13,7 @@ const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 const controller = new HTMLElementController(canvas);
-const drawer = new CanvasDrawer(ctx);
+export const drawer = new CanvasDrawer(ctx);
 
 
 // --- player and ball --
@@ -61,6 +61,8 @@ function mainLoop(timeStamp: number){
   if(LineSegment.sat(box, box2)){
     ctx.fillText("wall collision....", 500, 400);
   }
+
+
 
   // // draw distance wall
   // walls[0].closestPosintBallandWall(playerBall)

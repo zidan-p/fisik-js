@@ -22,6 +22,10 @@ export class Box  {
   private _refDirection: Vector;
 
   private _angleVelocity: number;
+  private _angleFriction?: number;
+  private _angleAcceleration?: number;
+  private _angleAccelerationIncrement?: number;
+
   private _velocity = new Vector(0,0);
   private _acceleration = new Vector(0,0);
   private _accelerationIncrement = 1;
@@ -182,7 +186,7 @@ export class Box  {
     this._position = this._position.add(this._velocity);
 
     this._angle += this._angleVelocity;
-    this._angleVelocity *= 0.96;
+    this._angleVelocity *= 0.6;
 
     const rotationMat = Matrix.rotationMatrix(this._angle);
     this._direction = this._refDirection.multMatrix(rotationMat);
