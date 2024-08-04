@@ -1,9 +1,10 @@
 import { Drawer } from "../drawer";
 import {Vector} from "../vector";
 import { DrawOption } from "./draw-option.interface";
+import { Shape } from "./shape.interface";
 
 
-export class Line {
+export class Line implements Shape {
 
 
   private _vertex: Vector[];

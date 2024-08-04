@@ -2,17 +2,18 @@ import { Drawer } from "../drawer";
 import { Matrix } from "../matrix";
 import { Vector } from "../vector";
 import { DrawOption } from "./draw-option.interface";
+import { Shape } from "./shape.interface";
 
 
 
 
 
-export class Rectangle {
+export class Rectangle implements Shape {
   private _direction: Vector;
   private _vertex: [Vector, Vector, Vector, Vector];
   private _position: Vector;
   private _angle: number;
-  private _rotationMatrix: Matrix<2,2>;
+  private _rotationMatrix: Matrix<2,2> = new Matrix([[0,0], [0,0]]);
 
   private _edge: Vector;
   private _length: number;
@@ -98,7 +99,7 @@ export class Rectangle {
   }
 
   draw(){
-    this._drawer.drawRectangle(this._vertex, "none", "black");
+    this._drawer.drawRectangle(this._vertex, this._fillColor, this._strokeColor);
     this._drawer.drawCircle(this._position.x, this._position.y, 10, undefined, undefined, "none", "red")
   }
 }

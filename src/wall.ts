@@ -3,11 +3,14 @@ import { Controller } from "./controller";
 import { Drawer } from "./drawer";
 import { LineSegment } from "./line-segment";
 import { Matrix } from "./matrix";
+import { Shape } from "./shapes/shape.interface";
 import { Vector } from "./vector";
-
+import { Line } from "./shapes/line";
 
 
 export class Wall implements LineSegment{
+
+  private _components: Shape[];
 
   public directionMovement = {
     up: false,
@@ -43,6 +46,8 @@ export class Wall implements LineSegment{
     this.refStart = this.start.newInstance();
     this.refEnd = this.end.newInstance();
     this.refUnit = this.end.subtr(this.start).unit();
+
+    this._components = [new Line(start, end, {drawer})];
 
     this.registerController();
   }

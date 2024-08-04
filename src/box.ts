@@ -2,13 +2,17 @@ import { Controller } from "./controller";
 import { Drawer } from "./drawer";
 import { LineSegment } from "./line-segment";
 import { Matrix } from "./matrix";
+import { Shape } from "./shapes/shape.interface";
 import { Vector } from "./vector";
-
+import {Rectangle} from "./shapes/rectangle";
 
 
 
 
 export class Box  {
+
+  private _components: Shape[];
+
   private _start: Vector;
   private _end: Vector;
   private _direction: Vector;
@@ -78,6 +82,8 @@ export class Box  {
 
     this._controller = controller;
     this._drawer = drawer
+
+    this._components = [new Rectangle(start, end, width, {drawer})];
 
     this.registerController();
   }

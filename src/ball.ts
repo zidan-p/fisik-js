@@ -3,13 +3,15 @@ import { Drawer } from "./drawer";
 import { VertexContainer } from "./line-segment";
 import { NumberUtils } from "./util";
 import { Vector } from "./vector";
-
-
+import {Shape} from "./shapes/shape.interface";
+import {Circle} from "./shapes/circle";
 
 
 
 export class Ball implements VertexContainer {
   
+  private _components: Shape[];
+
   private _position: Vector;
   private _radius: number;
   private color: string;
@@ -57,6 +59,8 @@ export class Ball implements VertexContainer {
     this.strokeColor = strokeColor;
 
     this._vertex = []
+
+    this._components = [new Circle(position, radius, {drawer})]
 
     this.setInverseMass(mass);
     if(this.controller) this.registerController();
@@ -155,7 +159,9 @@ export class Ball implements VertexContainer {
   }
 
   draw(){
-    this.drawer.drawCircle(this._position.x, this._position.y, this._radius, undefined, undefined, this.color, this.strokeColor);
+    // this.drawer.drawCircle(this._position.x, this._position.y, this._radius, undefined, undefined, this.color, this.strokeColor);
+
+    this._components[0].draw();
 
     // also draw vector helper
     Vector.drawViewLine(this._position, this.acceleration, 50, this.drawer, "green");

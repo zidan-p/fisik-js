@@ -1,12 +1,13 @@
 import { Drawer } from "../drawer";
 import { Vector } from "../vector";
 import { DrawOption } from "./draw-option.interface";
+import { Shape } from "./shape.interface";
 
 
 
 
 
-export class Circle {
+export class Circle implements Shape {
   private _position: Vector;
   private _radius: number;
   private _vertex: Vector[];
