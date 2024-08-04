@@ -18,6 +18,7 @@ export const drawer = new CanvasDrawer(ctx);
 
 // --- player and ball --
 // const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "#6ee7b7", controller);
+const ball = new Ball(new Vector(200, 200), 30, drawer, 1000, "none", "black");
 const balls: Ball[] = [];
 
 
@@ -53,12 +54,17 @@ function mainLoop(timeStamp: number){
 
   box.draw();
   box.move();
-  box2.draw();
-  box2.move();
-  // wall1.draw();
+  // box2.draw(); 
+  // box2.move();
+  // ball.draw();
+  // ball.move();
+  wall1.draw();
   // wall2.draw();
 
-  if(LineSegment.sat(box, box2)){
+  // if(LineSegment.sat(box, box2)){
+  //   ctx.fillText("wall collision....", 500, 400);
+  // }
+  if(LineSegment.satBoxAndBall(box, wall1)){
     ctx.fillText("wall collision....", 500, 400);
   }
 

@@ -186,7 +186,7 @@ export class Box  {
     this._position = this._position.add(this._velocity);
 
     this._angle += this._angleVelocity;
-    this._angleVelocity *= 0.6;
+    this._angleVelocity *= 0.9; 
 
     const rotationMat = Matrix.rotationMatrix(this._angle);
     this._direction = this._refDirection.multMatrix(rotationMat);

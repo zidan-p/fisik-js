@@ -1,5 +1,6 @@
 import { Controller } from "./controller";
 import { Drawer } from "./drawer";
+import { VertexContainer } from "./line-segment";
 import { NumberUtils } from "./util";
 import { Vector } from "./vector";
 
@@ -7,18 +8,21 @@ import { Vector } from "./vector";
 
 
 
-export class Ball {
+export class Ball implements VertexContainer {
   
   private _position: Vector;
   private _radius: number;
   private color: string;
+  private strokeColor?: string;
+
+  private _vertex: Vector[];
 
   private _velocity = new Vector(0,0);
   private acceleration = new Vector(0,0);
-  private mass: number;
-  private inverseMass!: number;
-  private accelerationIncrement = 1;
-  private friction = 0.1
+  private _mass: number;
+  private _inverseMass!: number;
+  private _accelerationIncrement = 1;
+  private _friction = 0.1
   private _elasticity = 0.5;
   
   private drawer: Drawer;
@@ -41,14 +45,18 @@ export class Ball {
     drawer: Drawer,
     mass: number,
     color?: string,
+    strokeColor?: string,
     controller?: Controller,
   ){
-    this.mass = mass ?? 100;
+    this._mass = mass ?? 100;
     this._position = position;
     this._radius = radius
     this.drawer = drawer;
     this.color = color ?? "#dc2626";
     this.controller = controller;
+    this.strokeColor = strokeColor;
+
+    this._vertex = []
 
     this.setInverseMass(mass);
     if(this.controller) this.registerController();
@@ -78,19 +86,22 @@ export class Ball {
   public getVelocity(){return this._velocity}
   public setVelocity(v: Vector){this._velocity = v}
 
+  public set vertex(v: Vector[]){this._vertex = v}
+  public get vertex(){return this._vertex}
+
   /** 
    * TODO: find out why should inverse mass should be zero when the mass is zero?
    * is it becasue the zero mass entity is considered static object??
    *  */
-  public setInverseMass(n: number){n === 0 ? this.inverseMass = 0 : this.inverseMass = 1 / this.mass}
+  public setInverseMass(n: number){n === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass}
 
-  public getInverseMass(){return this.inverseMass}
+  public getInverseMass(){return this._inverseMass}
 
   public setMass(n: number){
-    this.mass = n;
+    this._mass = n;
     this.setInverseMass(n);
   }
-  public getMass(){return this.mass};
+  public getMass(){return this._mass};
 
   private registerController(){
     console.log("registering controller");
@@ -112,16 +123,16 @@ export class Ball {
 
   keyControl(){
     if(this.direction.left){
-      this.acceleration.x = -this.accelerationIncrement;
+      this.acceleration.x = -this._accelerationIncrement;
     }
     if(this.direction.up){
-      this.acceleration.y = -this.accelerationIncrement;
+      this.acceleration.y = -this._accelerationIncrement;
     }
     if(this.direction.right){
-      this.acceleration.x = this.accelerationIncrement;
+      this.acceleration.x = this._accelerationIncrement;
     }
     if(this.direction.down){ 
-      this.acceleration.y = this.accelerationIncrement;
+      this.acceleration.y = this._accelerationIncrement;
     }
     if(!this.direction.left && !this.direction.right){
       this.acceleration.x = 0;
@@ -132,9 +143,9 @@ export class Ball {
   }
 
   reposition(){
-    this.acceleration = this.acceleration.unit().mult(this.accelerationIncrement);
+    this.acceleration = this.acceleration.unit().mult(this._accelerationIncrement);
     this._velocity = this._velocity.add(this.acceleration);
-    this._velocity = this._velocity.mult(1 - this.friction);
+    this._velocity = this._velocity.mult(1 - this._friction);
     this._position = this._position.add(this._velocity);
   }
 
@@ -144,14 +155,14 @@ export class Ball {
   }
 
   draw(){
-    this.drawer.drawCircle(this._position.x, this._position.y, this._radius, undefined, undefined, this.color);
+    this.drawer.drawCircle(this._position.x, this._position.y, this._radius, undefined, undefined, this.color, this.strokeColor);
 
     // also draw vector helper
     Vector.drawViewLine(this._position, this.acceleration, 50, this.drawer, "green");
     Vector.drawViewLine(this._position, this._velocity, 15, this.drawer, "red");
 
     // add stat of ball
-    this.drawer.fillText("M : " + this.mass, this._position.x - 10, this._position.y - 5);
+    this.drawer.fillText("M : " + this._mass, this._position.x - 10, this._position.y - 5);
     this.drawer.fillText("E : " + this._elasticity, this._position.x - 10, this._position.y + 5);
   }
 

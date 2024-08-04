@@ -16,6 +16,7 @@ export class Capsule implements LineSegment{
   private _length:number;
   private _direction: Vector;
 
+  private _vertex: Vector[];
   private _angleVelocity: number;
   private _velocity = new Vector(0,0);
   private _acceleration = new Vector(0,0);
@@ -50,6 +51,8 @@ export class Capsule implements LineSegment{
     // make sure dependent props already defined.
     this.mass = mass;
 
+    this._vertex = [];
+
 
     this._angle = 0;
     this._angleVelocity = 0;
@@ -83,6 +86,8 @@ export class Capsule implements LineSegment{
   public get angleVelocity(){return this._angleVelocity}
   public set angleVelocity(n: number){this._angleVelocity = n}
 
+  public set vertex(v: Vector[]){this._vertex = v}
+  public get vertex(){return this._vertex}
 
   public get end(){return this._end}
   public set end(e: Vector){this._end = e}
