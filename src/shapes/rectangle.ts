@@ -21,6 +21,8 @@ export class Rectangle implements Shape {
   private _refDirection: Vector;
 
 
+  public start: Vector;
+  public end: Vector;
 
   public directionMovement = {
     up: false,
@@ -40,6 +42,9 @@ export class Rectangle implements Shape {
     this._vertex[0] = start.newInstance();
     this._vertex[1] = end.newInstance();
     this._edge = this._vertex[1].subtr(this._vertex[0]);
+
+    this.start = start;
+    this.end = end;
 
     this._width = width;
     this._length = this._edge.mag();
@@ -75,6 +80,12 @@ export class Rectangle implements Shape {
 
   public get direction(){return this._direction}
   public set direction(d: Vector){this._direction = d}
+
+  public get angle(){return this._angle}
+  public set angle(an: number){this._angle = an}
+
+  public set length(l: number){this.length = l}
+  public get length(){return this._length}
 
 
   public getVertices(){

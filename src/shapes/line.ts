@@ -10,6 +10,7 @@ export class Line implements Shape {
   private _vertex: Vector[];
   private _direction: Vector;
   private _magnitude: number;
+  private _center: Vector;
 
   private _fillColor?: string;
   private _strokeColor?: string;
@@ -21,6 +22,9 @@ export class Line implements Shape {
     this._vertex[1] = end.newInstance();
     this._direction = this._vertex[1].subtr(this._vertex[0]).unit();
     this._magnitude = this._vertex[1].subtr(this._vertex[0]).mag();
+    
+    this._center = start.add(end).mult(0.5);
+
     this._fillColor = drawOption.fillColor;
     this._strokeColor = drawOption.strokeColor;
     this._drawer = drawOption.drawer;
@@ -35,6 +39,8 @@ export class Line implements Shape {
   public get magnitude(){return this._magnitude}
   public set magnitude(m: number){this._magnitude = m}
 
+  public get position(){return this._center}
+  public set position(pos: Vector){this._center = pos}
 
   public draw(){
     this._drawer?.drawLine(

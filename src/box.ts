@@ -11,7 +11,7 @@ import {Rectangle} from "./shapes/rectangle";
 
 export class Box  {
 
-  private _components: Shape[];
+  private _components: Rectangle[];
 
   private _start: Vector;
   private _end: Vector;
@@ -189,29 +189,14 @@ export class Box  {
     this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
     this._velocity = this._velocity.add(this._acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
-    this._position = this._position.add(this._velocity);
+    // this._position = this._position.add(this._velocity);
+    this._components[0].position = this._components[0].position.add(this._velocity);
 
-    this._angle += this._angleVelocity;
     this._angleVelocity *= 0.9; 
+    this._components[0].angle += this._angleVelocity;
+    // this._angle += this._angleVelocity;
 
-    const rotationMat = Matrix.rotationMatrix(this._angle);
-    this._direction = this._refDirection.multMatrix(rotationMat);
-
-    this._vertex[0] = this._position
-      .add(this._direction.mult(-this._length / 2))
-      .add(this._direction.normal().mult(this._width / 2));
-
-    this._vertex[1] = this._position
-      .add(this._direction.mult(-this._length / 2))
-      .add(this._direction.normal().mult(-this._width / 2));
-
-    this._vertex[2] = this._position
-      .add(this._direction.mult(this._length / 2))
-      .add(this._direction.normal().mult(-this._width / 2));
-
-    this._vertex[3] = this._position
-      .add(this._direction.mult(this._length / 2))
-      .add(this._direction.normal().mult(this._width / 2));
+    this._components[0].getVertices();
   }
 
 
@@ -221,7 +206,8 @@ export class Box  {
   }
 
   draw(){
-    this._drawer.drawRectangle(this._vertex, "none", "black");
+    this._components[0].draw()
+    // this._drawer.drawRectangle(this._vertex, "none", "black");
     this._drawer.drawCircle(this._position.x, this._position.y, 10, undefined, undefined, "none", "red")
   }
 }

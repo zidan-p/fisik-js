@@ -97,17 +97,18 @@ export class Wall implements LineSegment{
   }
 
   draw(){
-    const rotationMatrix = Matrix.rotationMatrix(this.angle);
-    const newDirection = this.refUnit.multMatrix(rotationMatrix);
-    this.start = this.center.add(newDirection.mult(-this.length / 2));
-    this.end = this.center.add(newDirection.mult(this.length / 2));
-    this.drawer.drawLine(
-      this.start.x, 
-      this.start.y,
-      this.end.x,
-      this.end.y,
-      this._color
-    )
+    this._components[0].draw();
+    // const rotationMatrix = Matrix.rotationMatrix(this.angle);
+    // const newDirection = this.refUnit.multMatrix(rotationMatrix);
+    // this.start = this.center.add(newDirection.mult(-this.length / 2));
+    // this.end = this.center.add(newDirection.mult(this.length / 2));
+    // this.drawer.drawLine(
+    //   this.start.x, 
+    //   this.start.y,
+    //   this.end.x,
+    //   this.end.y,
+    //   this._color
+    // )
   }
 
   static closestPosintBallandWall(ball: Ball, wall: Wall){

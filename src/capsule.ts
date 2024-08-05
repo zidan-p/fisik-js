@@ -2,19 +2,14 @@ import { Controller } from "./controller";
 import { Drawer } from "./drawer";
 import { LineSegment } from "./line-segment";
 import { Matrix } from "./matrix";
+import { Circle } from "./shapes/circle";
+import { Rectangle } from "./shapes/rectangle";
 import {Vector} from "./vector"
 
-export class Capsule implements LineSegment{
+export class Capsule{
 
-  private _start: Vector
-  private _end: Vector;
-  private _rad: number;
-  private _refDirection: Vector;
-  private _refAngle: number;
-  private _angle: number;
-  private _position: Vector;
-  private _length:number;
-  private _direction: Vector;
+  private _componets: [Rectangle, Circle, Circle];
+
 
   private _vertex: Vector[];
   private _angleVelocity: number;
@@ -41,11 +36,15 @@ export class Capsule implements LineSegment{
 
 
   constructor(start: Vector,end: Vector,rad: number, mass: number,drawer: Drawer, controller?: Controller){
-    this._start = start;
-    this._end = end;
-    this._rad = rad;
-    this._position = this._start.add(this._end).mult(0.5);
-    this._length = this._end.subtr(this._start).mag();
+    
+    const circle1 = new Circle(start, rad, {drawer});
+    const circle2 = new Circle(end, rad, {drawer});
+
+    const recV1 = circle2.position.add(circle2.position.subtr(circle1.position).unit().normal().mult(rad));
+    const recV2 = circle1.position.add(circle2.position.subtr(circle1.position).unit().normal().mult(rad));
+    const rect = new Rectangle(recV1, recV2, 2 * rad, {drawer});
+
+    this._componets = [rect, circle1, circle2]
 
     // becarefull, some of initializer properties happened here.
     // make sure dependent props already defined.
@@ -54,16 +53,7 @@ export class Capsule implements LineSegment{
     this._vertex = [];
 
 
-    this._angle = 0;
     this._angleVelocity = 0;
-    this._direction = this._end.subtr(this._start).unit();
-    this._refDirection = this._end.subtr(this._start).unit();
-    
-    this._refAngle = Math.acos(Vector.dot(this._end.subtr(this._start).unit(), new Vector(1,0)));
-
-    if(Vector.cross(this._refDirection, new Vector(1,0)) > 0) {
-      this._refAngle *= -1;
-    }
 
     this._controller = controller;
     this._drawer = drawer
@@ -71,8 +61,8 @@ export class Capsule implements LineSegment{
     this.registerController()
   }
 
-  public get position (){return this._position}
-  public set position(pos: Vector) {this._position = pos};
+  public get position (){return this._componets[0].position}
+  // public set position(pos: Vector) {this._position = pos};
 
   public set elasticity(n: number) {this._elasticity = n}
   public get elasticity(){return this._elasticity}
@@ -80,8 +70,6 @@ export class Capsule implements LineSegment{
   public get velocity(){return this._velocity}
   public set velocity(v: Vector){this._velocity = v}
 
-  public get start(){ return this._start}
-  public set start(s: Vector){ this.start = s}
 
   public get angleVelocity(){return this._angleVelocity}
   public set angleVelocity(n: number){this._angleVelocity = n}
@@ -89,17 +77,21 @@ export class Capsule implements LineSegment{
   public set vertex(v: Vector[]){this._vertex = v}
   public get vertex(){return this._vertex}
 
-  public get end(){return this._end}
-  public set end(e: Vector){this._end = e}
 
-  public get radius(){return this._rad}
-  public set radius(r: number){this._rad = r}
-
-  public get direction(){return this._direction}
-  public set direction(d: Vector){this._direction = d}
+  // public get direction(){return this._direction}
+  // public set direction(d: Vector){this._direction = d}
 
   public set inverseMass(n: number){this._inverseMass = n}
   public get inverseMass(){return this._inverseMass}
+
+  public set components(comp: [Rectangle, Circle, Circle]){this._componets = comp}
+  public get components(){return this._componets}
+
+  public get rectangle(){return this._componets[0]}
+  public get startCircle(){return this._componets[1]}
+  public get endCircle(){return this._componets[2]}
+
+
   public setDefaultInverseMass(){
     this.mass === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass
   }
@@ -107,8 +99,8 @@ export class Capsule implements LineSegment{
 
   /** default using mass value */
   public set inertia(inert: number){this._inertia = inert;}
-  public setDefaultInertia(){
-    this._inertia = this._mass * ((2 * this._rad)**2 + (this._length + 2 * this._rad)**2 ) / 12;
+  public setDefaultInertia(radius: number){
+    this._inertia = this._mass * ((2 * radius)**2 + (this.._length + 2 * radius)**2 ) / 12;
   }
   public get inertia(){return this._inertia}
 
@@ -126,7 +118,7 @@ export class Capsule implements LineSegment{
     this._mass = n;
     
     this.setDefaultInverseMass();
-    this.setDefaultInertia(); //it must first before inverse innertia
+    this.setDefaultInertia(this._componets[0].angle); //it must first before inverse innertia
     this.setDefaultInverseInertia();
   }
   public getMass(){return this._mass};
@@ -172,21 +164,19 @@ export class Capsule implements LineSegment{
     this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
     this._velocity = this._velocity.add(this._acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
-    this._position = this._position.add(this._velocity);
+    this._componets[0].position = this._componets[0].position.add(this._velocity);
 
-    this._angle += this._angleVelocity;
     this._angleVelocity *= 0.96;
+    this._componets[0].angle += this._angleVelocity;
+    this._componets[0].getVertices();
 
-    const rotationMat = Matrix.rotationMatrix(this._angle);
-    this._direction = this._refDirection.multMatrix(rotationMat);
-
-    this._start = this._position.add(this._direction.mult(- this._length / 2));
-    this._end = this._position.add(this._direction.mult(this._length / 2));
+    this._componets[1].position = this._componets[0].position.add(this._componets[0].direction.mult(-this._componets[0].length/2))
+    this._componets[2].position = this._componets[0].position.add(this._componets[0].direction.mult(this._componets[0].length/2))
   }
 
   // line segment of closest point of certain position with capsule line
   static closestPointPositionToCapsuleLine(position: Vector, capsule: Capsule){
-    return LineSegment.closestPointPositionToLineSegment(position, capsule);
+    return LineSegment.closestPointPositionToLineSegment(position, capsule._componets[0]);
   }
 
   closestPointPositionToCapsuleLine(position: Vector){
@@ -195,8 +185,8 @@ export class Capsule implements LineSegment{
 
 
   static collisionDetectionBetweenCapsules(cap1: Capsule, cap2: Capsule){
-    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1, cap2);
-    if(cap1.radius + cap2.radius >= closestPoint[0].subtr(closestPoint[1]).mag())
+    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1._componets[0], cap2.components[0]);
+    if(cap1.components[1].radius + cap2.components[1].radius >= closestPoint[0].subtr(closestPoint[1]).mag())
       return true;
     return false;
   }
@@ -206,11 +196,11 @@ export class Capsule implements LineSegment{
   }
 
   static penetrationResolutionBetweenCapsules(cap1: Capsule, cap2: Capsule){
-    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1, cap2);
+    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1.components[0], cap2.components[0]);
 
     const distance = closestPoint[0].subtr(closestPoint[1]);
 
-    const penetrationDepth = cap1.radius + cap2.radius - distance.mag();
+    const penetrationDepth = cap1.components[1].radius + cap2.components[1].radius - distance.mag();
 
     const penetrationResolution = distance.unit().mult(penetrationDepth / (cap1.inverseMass + cap2.inverseMass));
 
@@ -224,16 +214,16 @@ export class Capsule implements LineSegment{
 
   
   static collisionResolutionBetweenCapsules(cap1: Capsule, cap2: Capsule){
-    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1, cap2);
+    const closestPoint = LineSegment.closestPointBetweenLineSegemnt(cap1.components[0], cap2.components[0]);
 
     const normal = closestPoint[0].subtr(closestPoint[1]).unit();
 
     // closing velocity
-    const collisionArm1 = closestPoint[0].subtr(cap1.position).add(normal.mult(cap1.radius));
+    const collisionArm1 = closestPoint[0].subtr(cap1.position).add(normal.mult(cap1.components[1].radius));
     const rotationVelocity1 = new Vector(-cap1.angleVelocity * collisionArm1.y, cap1.angleVelocity * collisionArm1.x);
     const closingVelocity1 = cap1.velocity.add(rotationVelocity1);
 
-    const collisionArm2 = closestPoint[1].subtr(cap2.position).add(normal.mult(-cap2.radius));
+    const collisionArm2 = closestPoint[1].subtr(cap2.position).add(normal.mult(-cap2.components[1].radius));
     const rotationVelocity2 = new Vector(-cap2.angleVelocity * collisionArm2.y, cap2.angleVelocity * collisionArm2.x);
     const closingVelocity2 = cap2.velocity.add(rotationVelocity2);
 
@@ -280,23 +270,10 @@ export class Capsule implements LineSegment{
   }
 
   draw(){
-    this._drawer.drawCapsule(
-      this._start.x,
-      this._start.y,
-      this._end.x,
-      this._end.y,
-      this._rad,
-      this._angle,
-      this._refAngle,
-      "none"
-    )
 
-    this._drawer.drawLine(
-      this._start.x,
-      this._start.y,
-      this._end.x,
-      this._end.y,
-    )
+    this._componets[0].draw();
+    this._componets[1].draw();
+    this._componets[2].draw();
   }
 
 }
