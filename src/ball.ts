@@ -13,7 +13,7 @@ export class Ball implements VertexContainer {
   private _components: Shape[];
 
   private _position: Vector;
-  private _radius: number;
+  // private _radius: number;
   private color: string;
   private strokeColor?: string;
 
@@ -52,7 +52,7 @@ export class Ball implements VertexContainer {
   ){
     this._mass = mass ?? 100;
     this._position = position;
-    this._radius = radius
+    // this._radius = radius
     this.drawer = drawer;
     this.color = color ?? "#dc2626";
     this.controller = controller;
@@ -69,8 +69,8 @@ export class Ball implements VertexContainer {
   public get position (){return this._position}
   public set position(pos: Vector) {this._position = pos};
 
-  public get radius() {return this._radius}
-  public set radius(r: number){ this._radius = r}
+  // public get radius() {return this._radius}
+  // public set radius(r: number){ this._radius = r}
 
   public set elascticity(n: number) {this._elasticity = n}
   public get elasticity(){return this._elasticity}
@@ -81,8 +81,8 @@ export class Ball implements VertexContainer {
   public getPosition (){return this._position}
   public setPosition(pos: Vector) {this._position = pos};
 
-  public getRadius() {return this._radius}
-  public setRadius(r: number){ this._radius = r}
+  // public getRadius() {return this._radius}
+  // public setRadius(r: number){ this._radius = r}
 
   public setElascticity(n: number) {this._elasticity = n}
   public getElasticity(){return this._elasticity}
@@ -176,8 +176,9 @@ export class Ball implements VertexContainer {
 
 
   static collisionDetectionBetweenBall(ball1: Ball, ball2: Ball){
-    if(ball1.getRadius() + ball2.getRadius() >= ball2.getPosition().subtr(ball1.getPosition()).mag()) return true;
-    return false;
+    throw new Error("collision not initialized")
+    // if(ball1.getRadius() + ball2.getRadius() >= ball2.getPosition().subtr(ball1.getPosition()).mag()) return true;
+    // return false;
   }
 
   collisionDetectionBetweenBall(ball: Ball){
@@ -186,11 +187,12 @@ export class Ball implements VertexContainer {
 
 
   static penetrationResolutionBetweenBall(ball1: Ball, ball2: Ball){
-    const distance = ball1.getPosition().subtr(ball2.getPosition());
-    const penetrationDepth = ball1.getRadius() + ball2.getRadius() - distance.mag();
-    const penetrationResolutionBetweenBall = distance.unit().mult(penetrationDepth / (ball1.getInverseMass() + ball2.getInverseMass()));
-    ball1.setPosition(ball1.getPosition().add(penetrationResolutionBetweenBall.mult(ball1.getInverseMass())));
-    ball2.setPosition(ball2.getPosition().add(penetrationResolutionBetweenBall.mult(-ball2.getInverseMass())));
+    throw new Error("penetration resolution not initialized")
+    // const distance = ball1.getPosition().subtr(ball2.getPosition());
+    // const penetrationDepth = ball1.getRadius() + ball2.getRadius() - distance.mag();
+    // const penetrationResolutionBetweenBall = distance.unit().mult(penetrationDepth / (ball1.getInverseMass() + ball2.getInverseMass()));
+    // ball1.setPosition(ball1.getPosition().add(penetrationResolutionBetweenBall.mult(ball1.getInverseMass())));
+    // ball2.setPosition(ball2.getPosition().add(penetrationResolutionBetweenBall.mult(-ball2.getInverseMass())));
   }
 
   penetrationResolutionBetweenBall(ball: Ball){

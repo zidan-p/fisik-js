@@ -100,7 +100,8 @@ export class Capsule{
   /** default using mass value */
   public set inertia(inert: number){this._inertia = inert;}
   public setDefaultInertia(radius: number){
-    this._inertia = this._mass * ((2 * radius)**2 + (this.._length + 2 * radius)**2 ) / 12;
+    // this._inertia = this._mass * ((2 * radius)**2 + (this._length + 2 * radius)**2 ) / 12;
+    this._inertia = this._mass * ((2 * radius)**2 + ( 2 * radius)**2 ) / 12;
   }
   public get inertia(){return this._inertia}
 
@@ -144,10 +145,10 @@ export class Capsule{
 
   keyControl(){
     if(this.directionMovement.up){
-      this._acceleration = this._direction.mult(-this._accelerationIncrement);
+      this._acceleration = this._componets[0].direction.mult(-this._accelerationIncrement);
     }
     if(this.directionMovement.down){ 
-      this._acceleration = this._direction.mult(this._accelerationIncrement);
+      this._acceleration = this._componets[0].direction.mult(this._accelerationIncrement);
     }
     // if(this.directionMovement.left) this._acceleration.x = -this._accelerationIncrement;
     // if(this.directionMovement.right) this._acceleration.x = this._accelerationIncrement;
@@ -204,8 +205,9 @@ export class Capsule{
 
     const penetrationResolution = distance.unit().mult(penetrationDepth / (cap1.inverseMass + cap2.inverseMass));
 
-    cap1.position = cap1.position.add(penetrationResolution.mult(cap1.inverseMass));
-    cap2.position = cap2.position.add(penetrationResolution.mult(-cap2.inverseMass));
+    throw new Error("penetration resolution not ready")
+    // cap1.position = cap1.position.add(penetrationResolution.mult(cap1.inverseMass));
+    // cap2.position = cap2.position.add(penetrationResolution.mult(-cap2.inverseMass));
   }
 
   penetrationResolutionBetweenCapsules(capsule: Capsule){

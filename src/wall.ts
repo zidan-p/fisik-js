@@ -21,8 +21,8 @@ export class Wall implements LineSegment{
 
   public direction: Vector;
   public vertex: Vector[];
-  public center: Vector;
-  public length: number;
+  // public center: Vector;
+  // public length: number;
   public angle: number = 0;
   public angleVelocity = 0;
   public refStart: Vector;
@@ -38,8 +38,8 @@ export class Wall implements LineSegment{
     private controller?: Controller
   ){
 
-    this.center = this.start.add(this.end).mult(0.5);
-    this.length = this.end.subtr(this.start).mag();
+    // this.center = this.start.add(this.end).mult(0.5);
+    // this.length = this.end.subtr(this.start).mag();
     this.direction = this.end.subtr(this.start).unit();
     this.vertex = [this.start, this.end]
 
@@ -120,12 +120,10 @@ export class Wall implements LineSegment{
   }
 
   static collisionDetectionBallAndWall(ball: Ball, wall: Wall){
-    const ballClosest = Wall.closestPosintBallandWall(ball, wall).subtr(ball.getPosition());
-    // console.log("closest ball with wall : " + ballClosest.x + ", " + ballClosest.y);
-    // console.log("magnitude ball with wall : " + ballClosest.mag());
-    // console.log("radius ball : " + ball.getRadius());
-    if(ballClosest.mag() <= ball.getRadius()) return true;
-    return false;
+    throw new Error("collisionDetectionBallAndWall not initialize")
+    // const ballClosest = Wall.closestPosintBallandWall(ball, wall).subtr(ball.getPosition());
+    // if(ballClosest.mag() <= ball.getRadius()) return true;
+    // return false;
   }
 
   collisionDetectionBallAndWall(ball: Ball){
@@ -133,8 +131,9 @@ export class Wall implements LineSegment{
   }
 
   static penetrationResolutionBallAndWall(ball: Ball, wall: Wall){
-    const penetrationVector = ball.getPosition().subtr(Wall.closestPosintBallandWall(ball, wall));
-    ball.setPosition(ball.getPosition().add(penetrationVector.unit().mult(ball.getRadius() - penetrationVector.mag())))
+    throw new Error("penetrationResolutionBallAndWall not initialized")
+    // const penetrationVector = ball.getPosition().subtr(Wall.closestPosintBallandWall(ball, wall));
+    // ball.setPosition(ball.getPosition().add(penetrationVector.unit().mult(ball.getRadius() - penetrationVector.mag())))
   }
 
   penetrationResolutionBallAndWall(ball: Ball){
