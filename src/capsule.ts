@@ -2,7 +2,7 @@ import { Controller } from "./controller";
 import { Drawer } from "./drawer";
 import { LineSegment } from "./line-segment";
 import { Matrix } from "./matrix";
-import { Circle } from "./shapes/circle";
+import { Circle } from "./shapes/Circle";
 import { Rectangle } from "./shapes/rectangle";
 import {Vector} from "./vector"
 

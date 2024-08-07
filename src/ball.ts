@@ -4,7 +4,7 @@ import { VertexContainer } from "./line-segment";
 import { NumberUtils } from "./util";
 import { Vector } from "./vector";
 import {Shape} from "./shapes/shape.interface";
-import {Circle} from "./shapes/circle";
+import { Circle } from "./shapes/Circle";
 
 
 
