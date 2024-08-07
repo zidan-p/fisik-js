@@ -10,7 +10,7 @@ import { Line } from "./shapes/line";
 
 export class Wall implements LineSegment{
 
-  private _components: Shape[];
+  private _components: [Line];
 
   public directionMovement = {
     up: false,
@@ -60,6 +60,9 @@ export class Wall implements LineSegment{
 
   get color(){return this._color}
   set color(c: string){this._color = c}
+
+  set components(c: [Line]){this._components = c}
+  get components(){return this._components}
 
   wallUnit(){return this.end.subtr(this.start).unit()}
 

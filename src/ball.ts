@@ -4,13 +4,13 @@ import { VertexContainer } from "./line-segment";
 import { NumberUtils } from "./util";
 import { Vector } from "./vector";
 import {Shape} from "./shapes/shape.interface";
-import { Circle } from "./shapes/Circle";
+import { Circle } from "./shapes/circle";
 
 
 
 export class Ball implements VertexContainer {
   
-  private _components: Shape[];
+  private _components: [Circle];
 
   private _position: Vector;
   // private _radius: number;
@@ -60,7 +60,7 @@ export class Ball implements VertexContainer {
 
     this._vertex = []
 
-    this._components = [new Circle(position, radius, {drawer})]
+    this._components = [new Circle(position, radius, {drawer, fillColor: color, strokeColor})]
 
     this.setInverseMass(mass);
     if(this.controller) this.registerController();
@@ -92,6 +92,9 @@ export class Ball implements VertexContainer {
 
   public set vertex(v: Vector[]){this._vertex = v}
   public get vertex(){return this._vertex}
+
+  public get components(){return this._components}
+  public set components(c: [Circle]){this._components = c}
 
   /** 
    * TODO: find out why should inverse mass should be zero when the mass is zero?

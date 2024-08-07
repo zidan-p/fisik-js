@@ -5,6 +5,7 @@ import { Matrix } from "./matrix";
 import { Shape } from "./shapes/shape.interface";
 import { Vector } from "./vector";
 import {Rectangle} from "./shapes/rectangle";
+import { DrawOption } from "./shapes/draw-option.interface";
 
 
 
@@ -51,7 +52,7 @@ export class Box  {
   private _controller?: Controller
 
 
-  constructor(start: Vector,end: Vector,width: number, mass: number, drawer: Drawer, controller?: Controller){
+  constructor(start: Vector,end: Vector,width: number, mass: number, drawOption: DrawOption, controller?: Controller){
 
     // this._width = width;
     // this._length = this._edge.mag();
@@ -73,9 +74,9 @@ export class Box  {
 
 
     this._controller = controller;
-    this._drawer = drawer
+    this._drawer = drawOption.drawer
 
-    this._components = [new Rectangle(start, end, width, {drawer})];
+    this._components = [new Rectangle(start, end, width, drawOption)];
 
     this.registerController();
   }
@@ -94,6 +95,9 @@ export class Box  {
 
   public get angleVelocity(){return this._angleVelocity}
   public set angleVelocity(n: number){this._angleVelocity = n}
+
+  public get components(){return this._components}
+  public set components(c:Rectangle[] ){this._components = c}
 
   // public get vertex(){return this._vertex};
   // public set vertex(v: [Vector, Vector, Vector, Vector]){this._vertex = v}

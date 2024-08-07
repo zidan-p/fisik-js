@@ -17,7 +17,7 @@ export const drawer = new CanvasDrawer(ctx);
 
 
 // --- player and ball --
-// const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "#6ee7b7", controller);
+const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "none","black", controller);
 const ball = new Ball(new Vector(200, 200), 30, drawer, 1000, "none", "black");
 const balls: Ball[] = [];
 
@@ -46,8 +46,8 @@ const wall2 = new Wall(new Vector(150, 300), new Vector(350, 300), drawer);
 // capsules.push(new Capsule(new Vector(100, 50), new Vector(100, 300), 30,2, drawer));
 // capsules.push(playerCapsule);
 
-const box = new Box(new Vector(100, 100), new Vector(200, 100), 40, 20, drawer, controller);
-const box2 = new Box(new Vector(100, 300), new Vector(200, 300), 40, 20, drawer);
+const box = new Box(new Vector(100, 100), new Vector(200, 100), 40, 20, {drawer, fillColor: "none"}, controller);
+// const box2 = new Box(new Vector(100, 300), new Vector(200, 300), 40, 20, drawer);
 
 function mainLoop(timeStamp: number){
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
@@ -58,15 +58,21 @@ function mainLoop(timeStamp: number){
   // box2.move();
   // ball.draw();
   // ball.move();
+  // playerBall.draw();
+  // playerBall.move();
   wall1.draw();
   // wall2.draw();
 
-  // if(LineSegment.sat(box, box2)){
-  //   ctx.fillText("wall collision....", 500, 400);
-  // }
-  if(LineSegment.satBoxAndBall(box, wall1)){
+  if(LineSegment.sat(box.components[0], wall1.components[0])){
     ctx.fillText("wall collision....", 500, 400);
   }
+
+  // if(LineSegment.sat(playerBall.component[0], wall1.component[0])){
+  //   ctx.fillText("wall collision....", 500, 400);
+  // }
+  // if(LineSegment.satBoxAndBall(box, wall1)){
+  //   ctx.fillText("wall collision....", 500, 400);
+  // }
 
 
 

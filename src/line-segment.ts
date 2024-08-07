@@ -1,4 +1,4 @@
-import { Circle } from "./shapes/Circle";
+import { Circle } from "./shapes/circle";
 import { Box } from "./box";
 import { Drawer } from "./drawer";
 import { drawer } from "./main";
@@ -217,7 +217,7 @@ export abstract class LineSegment {
    
 
 
-  static getFirstShapeAxes(obj: unknown){
+  static getFirstShape(obj: unknown){
     if(obj instanceof Circle || obj instanceof Line) return 1;
     if(obj instanceof  Rectangle) return 2;
 
@@ -235,7 +235,7 @@ export abstract class LineSegment {
 
 
 
-  static findBallOrBoxAxes(ob1: Circle | LineSegment, ob2: Circle | LineSegment){
+  static findAxes(ob1: Circle | Line | Rectangle, ob2: Circle | Line | Rectangle){
     const axes: Vector[] = [];
 
     if(ob1 instanceof Circle && ob2 instanceof Circle){
@@ -246,11 +246,11 @@ export abstract class LineSegment {
     if(ob1 instanceof Circle){
       axes.push(
         LineSegment
-        .closestVertexToPoint(ob2 as LineSegment, ob1.position)!
+        .closestVertexToPoint(ob2 as Line, ob1.position)!
         .subtr(ob1.position)
         .unit()
       )
-      axes.push((ob2 as LineSegment).direction.normal());
+      axes.push((ob2 as Line).direction.normal());
       if(ob2 instanceof Rectangle) axes.push(ob2.direction);
 
       return axes;
@@ -279,7 +279,7 @@ export abstract class LineSegment {
     return axes;
   }
 
-  static projectionBallOrBoxOntoAxis(axis: Vector, object: VertexContainer): Projection{
+  static projectionOntoAxis(axis: Vector, object: VertexContainer): Projection{
     if(!object?.vertex) throw new Error("object + " + object?.constructor.name + " doesn't has the vertex" );
 
     LineSegment.setBallVerticesAlongAxis(object, axis);
@@ -305,22 +305,22 @@ export abstract class LineSegment {
    * @param o1 
    * @param o2 
    */
-  static satBoxAndBall(o1: LineSegment | Circle, o2: Circle | LineSegment){
+  static sat(o1: Line | Circle | Rectangle, o2: Circle | Line | Rectangle){
     let minOverlap: null | number = null;
     let smallestAxis: Vector;
     let vertexObject : VertexContainer;
 
-    const axes = LineSegment.findBallOrBoxAxes(o1, o2);
+    const axes = LineSegment.findAxes(o1, o2);
 
     let projection1: Projection;
     let projection2: Projection;
-    let firstShape = LineSegment.getFirstShapeAxes(o1);
+    let firstShape = LineSegment.getFirstShape(o1);
     
     
     for (let index = 0; index < axes.length; index++) {
       let overlap: number;
-      projection1 = LineSegment.projectionBallOrBoxOntoAxis(axes[index], o1);
-      projection2 = LineSegment.projectionBallOrBoxOntoAxis(axes[index], o2);
+      projection1 = LineSegment.projectionOntoAxis(axes[index], o1);
+      projection2 = LineSegment.projectionOntoAxis(axes[index], o2);
       overlap = Math.min(projection1.max, projection2.max) - Math.max(projection1.min, projection2.min);
       if(overlap < 0) return false;
 
@@ -355,7 +355,7 @@ export abstract class LineSegment {
 
 
     // beware !!!
-    const contactVertex = LineSegment.projectionBallOrBoxOntoAxis(smallestAxis!, vertexObject!).collisionVertex;
+    const contactVertex = LineSegment.projectionOntoAxis(smallestAxis!, vertexObject!).collisionVertex;
     smallestAxis!.drawViewLineToThisVector(contactVertex, minOverlap!, drawer ,"blue");
 
     return true;

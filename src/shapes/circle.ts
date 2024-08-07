@@ -10,7 +10,7 @@ import { Shape } from "./shape.interface";
 export class Circle implements Shape {
   private _position: Vector;
   private _radius: number;
-  private _vertex: Vector[];
+  private _vertex: Vector[]; 
 
   private _fillColor?: string;
   private _strokeColor?: string;
