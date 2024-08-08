@@ -3,6 +3,7 @@ import { Drawer } from "./drawer";
 import { LineSegment } from "./line-segment";
 import { Matrix } from "./matrix";
 import { Circle } from "./shapes/circle";
+import { DrawOption } from "./shapes/draw-option.interface";
 import { Rectangle } from "./shapes/rectangle";
 import {Vector} from "./vector"
 
@@ -35,14 +36,14 @@ export class Capsule{
   private _controller?: Controller
 
 
-  constructor(start: Vector,end: Vector,rad: number, mass: number,drawer: Drawer, controller?: Controller){
+  constructor(start: Vector,end: Vector,rad: number, mass: number,drawOption: DrawOption, controller?: Controller){
     
-    const circle1 = new Circle(start, rad, {drawer});
-    const circle2 = new Circle(end, rad, {drawer});
+    const circle1 = new Circle(start, rad, drawOption);
+    const circle2 = new Circle(end, rad, drawOption);
 
     const recV1 = circle2.position.add(circle2.position.subtr(circle1.position).unit().normal().mult(rad));
     const recV2 = circle1.position.add(circle2.position.subtr(circle1.position).unit().normal().mult(rad));
-    const rect = new Rectangle(recV1, recV2, 2 * rad, {drawer});
+    const rect = new Rectangle(recV1, recV2, 2 * rad, drawOption);
 
     this._componets = [rect, circle1, circle2]
 
@@ -56,7 +57,7 @@ export class Capsule{
     this._angleVelocity = 0;
 
     this._controller = controller;
-    this._drawer = drawer
+    this._drawer = drawOption.drawer
 
     this.registerController()
   }

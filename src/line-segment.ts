@@ -16,6 +16,12 @@ export interface VertexContainer {
   vertex: Vector[]
 }
 
+export interface SATResult{
+  penetration: number | null;
+  axis: Vector;
+  vertex: Vector;
+}
+
 export abstract class LineSegmentOld {
 
   abstract start: Vector;
@@ -305,7 +311,7 @@ export abstract class LineSegment {
    * @param o1 
    * @param o2 
    */
-  static sat(o1: Line | Circle | Rectangle, o2: Circle | Line | Rectangle){
+  static sat(o1: Line | Circle | Rectangle, o2: Circle | Line | Rectangle): SATResult | false{
     let minOverlap: null | number = null;
     let smallestAxis: Vector;
     let vertexObject : VertexContainer;
@@ -356,9 +362,13 @@ export abstract class LineSegment {
 
     // beware !!!
     const contactVertex = LineSegment.projectionOntoAxis(smallestAxis!, vertexObject!).collisionVertex;
-    smallestAxis!.drawViewLineToThisVector(contactVertex, minOverlap!, drawer ,"blue");
+    // smallestAxis!.drawViewLineToThisVector(contactVertex, minOverlap!, drawer ,"blue");
 
-    return true;
+    return {
+      axis: smallestAxis!,
+      penetration: minOverlap,
+      vertex: contactVertex
+    }
   }
 
   
