@@ -1,4 +1,4 @@
-import { Ball } from './ball';
+import { Ball } from './bodies/ball';
 import { Box } from './box';
 import { Capsule } from './capsule';
 import { HTMLElementController } from './controller';
