@@ -31,7 +31,7 @@ export class Capsule extends Body{
     const rect = new Rectangle(recV1, recV2, 2 * rad, drawOption);
 
     // teh superrr --------<<
-    super(rect.position, 0, mass);
+    super(rect.position, 0, mass, controller);
 
     this._componets = [rect, circle1, circle2]
 

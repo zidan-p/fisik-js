@@ -20,8 +20,6 @@ export class Wall extends Body implements LineSegment{
 
   private  _direction: Vector;
   private _vertex: Vector[];
-  public center: Vector;
-  public length: number;
 
   private _start: Vector;
   private _end: Vector;
@@ -36,13 +34,11 @@ export class Wall extends Body implements LineSegment{
     start: Vector,
     end: Vector,
     private drawer: Drawer,
-    protected controller?: Controller
+    controller?: Controller
   ){
-    super(start.add(end).mult(0.5), 0, 0);
+    super(start.add(end).mult(0.5), 0, 0, controller);
     this._start = start;
     this._end = end;
-    // this.center = this.start.add(this.end).mult(0.5);
-    // this.length = this.end.subtr(this.start).mag();
     this._direction = end.subtr(start).unit();
     this._vertex = [this._start, this._end]
 

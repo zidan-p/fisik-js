@@ -29,7 +29,7 @@ export class Box extends Body {
       .add(direction.mult(length / 2))
       .add(direction.normal().mult(width / 2))
 
-    super(position, 0, mass);
+    super(position, 0, mass, controller);
     
 
 

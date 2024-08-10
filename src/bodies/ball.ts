@@ -16,7 +16,7 @@ export class Ball extends Body implements VertexContainer {
   private color: string;
   private strokeColor?: string;
 
-  private _vertex: Vector[];
+  private _vertex: Vector[]; 
 
   private drawer: Drawer;
   protected controller?: Controller;
@@ -33,7 +33,7 @@ export class Ball extends Body implements VertexContainer {
     strokeColor?: string,
     controller?: Controller,
   ){
-    super(position, 0, mass);
+    super(position, 0, mass, controller);
 
     // // this._radius = radius
     this.drawer = drawer;

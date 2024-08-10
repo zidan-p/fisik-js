@@ -46,11 +46,11 @@ export abstract class Body {
     left: false
   }
 
-  constructor(position: Vector, angle: number, mass: number){
+  constructor(position: Vector, angle: number, mass: number, controller?: Controller){
     this._position = position
     this._angle = angle;
     this.mass = mass;
-
+    this.controller = controller;
     this.registerController();
   }
 
