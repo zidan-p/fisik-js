@@ -1,5 +1,4 @@
 import { Ball } from './bodies/ball';
-import { Box } from './box';
 import { Capsule } from './bodies/capsule';
 import { HTMLElementController } from './controller';
 import { CanvasDrawer } from './drawer';
@@ -9,6 +8,7 @@ import { NumberUtils } from './util';
 import { Vector } from './vector';
 import { Wall } from './bodies/wall';
 import { Body } from './body';
+import { Box } from './bodies/box';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -64,7 +64,9 @@ bodies.push(wall1);
 // bodies.push(capsule);
 
 // const box = new Box(new Vector(100, 100), new Vector(200, 100), 40, 20, {drawer, fillColor: "none"}, controller);
-// const box2 = new Box(new Vector(100, 300), new Vector(200, 300), 40, 20, drawer);
+const box2 = new Box(new Vector(100, 300), new Vector(200, 300), 40, 20, {drawer});
+
+bodies.push(box2);
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;
