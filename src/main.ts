@@ -9,6 +9,7 @@ import { Vector } from './vector';
 import { Wall } from './bodies/wall';
 import { Body } from './body';
 import { Box } from './bodies/box';
+import { Collision } from './collision';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -17,14 +18,15 @@ const controller = new HTMLElementController(canvas);
 export const drawer = new CanvasDrawer(ctx);
 
 const bodies: Body[] = []
+let collisionData: Collision[] = []
 
 // --- player and ball --
-const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "none","black", controller);
+const playerBall = new Ball(new Vector(200, 200), 30, drawer, 1000, "none","black", );
 // const ball = new Ball(new Vector(200, 200), 30, drawer, 1000, "none", "black");
 // const balls: Ball[] = [];
 
 console.log("after registering ball controller");
-bodies.push(playerBall);
+
 
 // -- walls ---
 const walls: Wall[] = [];
@@ -41,7 +43,7 @@ const wall1 = new Wall(new Vector(300, 100), new Vector(200, 330), drawer);
 // const wall2 = new Wall(new Vector(150, 300), new Vector(350, 300), drawer);
 
 console.log("after registering wall controller")
-bodies.push(wall1);
+
 
 // -- capsules --
 // const capsules: Capsule[] = [];
@@ -64,9 +66,13 @@ bodies.push(wall1);
 // bodies.push(capsule);
 
 // const box = new Box(new Vector(100, 100), new Vector(200, 100), 40, 20, {drawer, fillColor: "none"}, controller);
-const box2 = new Box(new Vector(100, 300), new Vector(200, 300), 40, 20, {drawer});
+const box2 = new Box(new Vector(100, 300), new Vector(150, 300), 40, 20, {drawer, fillColor: "none"}, controller);
+console.log("after registering box")
 
+// note, the player should be in first queue
 bodies.push(box2);
+bodies.push(playerBall);
+bodies.push(wall1);
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;
@@ -74,6 +80,8 @@ type Nullable<T> = {
 
 function mainLoop(timeStamp: number){
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+  collisionData = [];
 
   bodies.forEach((body, index) => {
     body.move();
@@ -106,6 +114,9 @@ function mainLoop(timeStamp: number){
       
       if(bestSAT.penetration !== null && bestSAT.axis !== null){
         bestSAT.axis?.drawViewLineToThisVector(bestSAT.vertex!, bestSAT.penetration!, drawer, "blue");
+
+        // draw contact
+        drawer.drawCircle(bestSAT.vertex!.x, bestSAT.vertex!.y, 5, undefined, undefined, "none")
 
         console.log("inverse masees index : " + bodies[index].inverseMass);
         console.log("inverse masees pair: " + bodies[bodyPair].inverseMass);

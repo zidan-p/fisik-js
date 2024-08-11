@@ -38,7 +38,6 @@ export class Box extends Body {
 
     this._components = [new Rectangle(start, end, width, drawOption)];
 
-    this.registerController();
   }
 
   public get components(){return this._components}

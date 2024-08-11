@@ -76,7 +76,7 @@ export abstract class Body {
   public set inverseMass(n: number){this._inverseMass = n}
   public get inverseMass(){return this._inverseMass}
   public setDefaultInverseMass(){
-    console.log(this.mass);
+    console.log("this mass : " + this.mass);
     this.mass === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass;
   }
   

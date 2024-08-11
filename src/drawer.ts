@@ -16,6 +16,7 @@ export interface Drawer{
     y: number, 
     radius: number, 
     startAngle?: number, 
+    /** in radian */
     endAngle?: number, 
     color?: string,
     strokeColor?: string

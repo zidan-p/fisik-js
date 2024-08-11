@@ -229,7 +229,13 @@ export abstract class LineSegment {
     const contactVertex = LineSegment.projectionOntoAxis(smallestAxis!, vertexObject!).collisionVertex;
     // smallestAxis!.drawViewLineToThisVector(contactVertex, minOverlap!, drawer ,"blue"); 
 
-    return {
+    if((vertexObject!) === o2){
+      console.log("smallest axis before: " + smallestAxis!.toString());
+      smallestAxis = smallestAxis!.mult(-1);
+      console.log("smallest axis after : " + smallestAxis!.toString());
+    }
+
+    return { 
       axis: smallestAxis!,
       penetration: minOverlap,
       vertex: contactVertex
