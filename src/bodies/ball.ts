@@ -92,6 +92,12 @@ export class Ball extends Body implements VertexContainer {
   draw(){
     // this.drawer.drawCircle(this._position.x, this._position.y, this._radius, undefined, undefined, this.color, this.strokeColor);
 
+    // draw info
+    
+    this.drawer.fillText("velocity: " + NumberUtils.round(this._velocity.x), 500, 410);
+    this.drawer.fillText("pos x: " + NumberUtils.round( this._components[0].position.x), 500, 400);
+    this.drawer.fillText("pos y: " + NumberUtils.round(this._components[0].position.y), 500, 390);
+
     this._components[0].draw();
 
     // also draw vector helper

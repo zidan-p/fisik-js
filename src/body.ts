@@ -1,5 +1,8 @@
 import { Controller } from "./controller";
 import { Drawer } from "./drawer";
+import { Circle } from "./shapes/circle";
+import { Line } from "./shapes/line";
+import { Rectangle } from "./shapes/rectangle";
 import { Shape } from "./shapes/shape.interface";
 import { Vector } from "./vector";
 
@@ -13,7 +16,7 @@ export abstract class Body {
 
   protected _angle: number;
 
-  abstract components: Shape[];
+  abstract components: (Rectangle | Circle | Line)[];
 
   // protected _edge: Vector;
   // protected _length: number;
@@ -73,7 +76,8 @@ export abstract class Body {
   public set inverseMass(n: number){this._inverseMass = n}
   public get inverseMass(){return this._inverseMass}
   public setDefaultInverseMass(){
-    this.mass === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass
+    console.log(this.mass);
+    this.mass === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass;
   }
   
 
@@ -102,6 +106,7 @@ export abstract class Body {
     this.setDefaultInertia(); //it must first before inverse innertia
     this.setDefaultInverseInertia();
   }
+  public get mass(){return this._mass}
   public getMass(){return this._mass};
 
 

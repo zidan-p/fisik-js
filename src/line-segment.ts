@@ -362,7 +362,7 @@ export abstract class LineSegment {
 
     // beware !!!
     const contactVertex = LineSegment.projectionOntoAxis(smallestAxis!, vertexObject!).collisionVertex;
-    // smallestAxis!.drawViewLineToThisVector(contactVertex, minOverlap!, drawer ,"blue");
+    // smallestAxis!.drawViewLineToThisVector(contactVertex, minOverlap!, drawer ,"blue"); 
 
     return {
       axis: smallestAxis!,

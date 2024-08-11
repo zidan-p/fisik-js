@@ -48,7 +48,6 @@ export class Wall extends Body implements LineSegment{
 
     this._components = [new Line(start, end, {drawer})];
 
-    this.registerController();
   }
 
   public get direction(){return this._direction}

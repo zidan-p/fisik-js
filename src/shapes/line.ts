@@ -43,6 +43,9 @@ export class Line implements Shape {
   public set position(pos: Vector){this._center = pos}
 
   public draw(){
+
+    this._drawer?.drawCircle(this._center.x, this._center.y, 10)
+
     this._drawer?.drawLine(
       this.vertex[0].x, 
       this._vertex[0].y, 
