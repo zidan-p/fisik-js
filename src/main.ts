@@ -113,26 +113,34 @@ function mainLoop(timeStamp: number){
       }
       
       if(bestSAT.penetration !== null && bestSAT.axis !== null){
-        bestSAT.axis?.drawViewLineToThisVector(bestSAT.vertex!, bestSAT.penetration!, drawer, "blue");
 
-        // draw contact
-        drawer.drawCircle(bestSAT.vertex!.x, bestSAT.vertex!.y, 5, undefined, undefined, "none")
+        collisionData.push(new Collision(bodies[index], bodies[bodyPair], bestSAT.axis, bestSAT.penetration, bestSAT.vertex!))
 
-        console.log("inverse masees index : " + bodies[index].inverseMass);
-        console.log("inverse masees pair: " + bodies[bodyPair].inverseMass);
+        // bestSAT.axis?.drawViewLineToThisVector(bestSAT.vertex!, bestSAT.penetration!, drawer, "blue");
 
-        let penetrationResolution = bestSAT.axis
-          .mult(bestSAT.penetration / bodies[index].inverseMass + bodies[bodyPair].inverseMass);
+        // // draw contact
+        // drawer.drawCircle(bestSAT.vertex!.x, bestSAT.vertex!.y, 5, undefined, undefined, "none")
 
-        console.log("penetration res: " + penetrationResolution);
+        // console.log("inverse masees index : " + bodies[index].inverseMass);
+        // console.log("inverse masees pair: " + bodies[bodyPair].inverseMass);
+
+        // let penetrationResolution = bestSAT.axis
+        //   .mult(bestSAT.penetration / bodies[index].inverseMass + bodies[bodyPair].inverseMass);
+
+        // console.log("penetration res: " + penetrationResolution);
         
-        bodies[index].components[0].position = bodies[index].components[0].position
-          .add(penetrationResolution.mult(bodies[index].inverseMass));
+        // bodies[index].components[0].position = bodies[index].components[0].position
+        //   .add(penetrationResolution.mult(bodies[index].inverseMass));
 
-        bodies[bodyPair].components[0].position = bodies[bodyPair].components[0].position
-        .add(penetrationResolution.mult(-bodies[bodyPair].inverseMass));
+        // bodies[bodyPair].components[0].position = bodies[bodyPair].components[0].position
+        // .add(penetrationResolution.mult(-bodies[bodyPair].inverseMass));
       }
     }
+
+    collisionData.forEach(col => {
+      col.penetrationresolution();
+      col.collisionResolution();
+    })
   
   })
 

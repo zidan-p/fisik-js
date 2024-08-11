@@ -38,6 +38,8 @@ export class Circle implements Shape {
   public get radius() {return this._radius}
   public set radius(r: number){ this._radius = r}
 
+  public get length(){return 2 * this._radius}
+
   public draw(){
     this._drawer?.drawCircle(
       this._position.x,

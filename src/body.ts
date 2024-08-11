@@ -56,6 +56,7 @@ export abstract class Body {
     this.controller = controller;
     this.registerController();
   }
+  
 
   public get acceleration(){return this._acceleration}
   public set acceleration(a: Vector){this._acceleration = a}
@@ -84,7 +85,11 @@ export abstract class Body {
   /** default using mass value */
   public set inertia(inert: number){this._inertia = inert;}
   public setDefaultInertia(){
-    // this._inertia = this._mass * (this._width**2 + (this._length + 2 * this._width)**2 ) / 12;
+    // @ts-ignore
+    if(Boolean(this.components[0]?.width as number) && this.components[0]?.length){
+      // @ts-ignore
+      this._inertia = this._mass * (this.components[0].width**2 + (this.components[0].length + 2 * this.components[0].width)**2 ) / 12;
+    }
     this._inertia = this._mass * (0**2 + (0 + 2 * 0)**2 ) / 12;
   }
   public get inertia(){return this._inertia}
@@ -98,6 +103,8 @@ export abstract class Body {
       this._inverseInertia = 1 / this._inertia;
     }
   }
+
+  public setNganu
 
   public set mass(n: number){
     this._mass = n;

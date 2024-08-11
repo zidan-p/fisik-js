@@ -42,6 +42,8 @@ export class Line implements Shape {
   public get position(){return this._center}
   public set position(pos: Vector){this._center = pos}
 
+  public get length(){return this.direction.mult(0.5).mag()}
+
   public draw(){
 
     this._drawer?.drawCircle(this._center.x, this._center.y, 10)
