@@ -230,9 +230,9 @@ export abstract class LineSegment {
     // smallestAxis!.drawViewLineToThisVector(contactVertex, minOverlap!, drawer ,"blue"); 
 
     if((vertexObject!) === o2){
-      console.log("smallest axis before: " + smallestAxis!.toString());
+      // console.log("smallest axis before: " + smallestAxis!.toString());
       smallestAxis = smallestAxis!.mult(-1);
-      console.log("smallest axis after : " + smallestAxis!.toString());
+      // console.log("smallest axis after : " + smallestAxis!.toString());
     }
 
     return { 

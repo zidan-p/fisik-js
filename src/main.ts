@@ -83,9 +83,13 @@ function mainLoop(timeStamp: number){
 
   collisionData = [];
 
-  bodies.forEach((body, index) => {
+  bodies.forEach(body => {
     body.move();
     body.draw();
+  })
+
+  bodies.forEach((body, index) => {
+
 
     
     for(let bodyPair = index + 1; bodyPair < bodies.length; bodyPair++ ){
@@ -137,11 +141,12 @@ function mainLoop(timeStamp: number){
       }
     }
 
-    collisionData.forEach(col => {
-      col.penetrationresolution();
-      col.collisionResolution();
-    })
+    
+  })
   
+  collisionData.forEach(col => {
+    col.penetrationresolution();
+    col.collisionResolution();
   })
 
   requestAnimationFrame(mainLoop);

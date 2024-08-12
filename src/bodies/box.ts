@@ -39,6 +39,8 @@ export class Box extends Body {
     this._components = [new Rectangle(start, end, width, drawOption)];
 
     this.setPhysicsComponent();
+
+    console.log("inverse inertia box : " + this._inverseInertia);
   }
 
   public get components(){return this._components}

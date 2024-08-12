@@ -97,7 +97,9 @@ export abstract class Body {
   public get inverseInertia(){return this._inverseInertia}
   public set inverseInertia(n: number){this._inverseInertia = n}
   public setDefaultInverseInertia(){
-    if(this.mass === 0){
+    if(this._mass === 0){
+      this._inverseInertia = 0;
+    }else if(this._inertia === 0){
       this._inverseInertia = 0;
     } else {
       this._inverseInertia = 1 / this._inertia;
