@@ -73,8 +73,8 @@ export class Wall extends Body implements LineSegment{
 
 
   public keyControl(){
-    if(this.directionMovement.left) this._angleVelocity -= 0.05;
-    if(this.directionMovement.right) this._angleVelocity += 0.05;
+    if(this.directionMovement.left) this._angleVelocity -= this._angleAcceleration;
+    if(this.directionMovement.right) this._angleVelocity += this._angleAcceleration;
   }
 
   public reposition(){
@@ -89,57 +89,5 @@ export class Wall extends Body implements LineSegment{
 
   draw(){
     this._components[0].draw();
-    // const rotationMatrix = Matrix.rotationMatrix(this.angle);
-    // const newDirection = this.refUnit.multMatrix(rotationMatrix);
-    // this.start = this.center.add(newDirection.mult(-this.length / 2));
-    // this.end = this.center.add(newDirection.mult(this.length / 2));
-    // this.drawer.drawLine(
-    //   this.start.x, 
-    //   this.start.y,
-    //   this.end.x,
-    //   this.end.y,
-    //   this._color
-    // )
-  }
-
-  static closestPosintBallandWall(ball: Ball, wall: Wall){
-    return LineSegment.closestPointPositionToLineSegment(ball.position, wall)
-  }
-
-  closestPosintBallandWall(ball: Ball){
-    return Wall.closestPosintBallandWall(ball, this)
-  }
-
-  static collisionDetectionBallAndWall(ball: Ball, wall: Wall){
-    throw new Error("collisionDetectionBallAndWall not initialize")
-    // const ballClosest = Wall.closestPosintBallandWall(ball, wall).subtr(ball.getPosition());
-    // if(ballClosest.mag() <= ball.getRadius()) return true;
-    // return false;
-  }
-
-  collisionDetectionBallAndWall(ball: Ball){
-    return Wall.collisionDetectionBallAndWall(ball, this)
-  }
-
-  static penetrationResolutionBallAndWall(ball: Ball, wall: Wall){
-    throw new Error("penetrationResolutionBallAndWall not initialized")
-    // const penetrationVector = ball.getPosition().subtr(Wall.closestPosintBallandWall(ball, wall));
-    // ball.setPosition(ball.getPosition().add(penetrationVector.unit().mult(ball.getRadius() - penetrationVector.mag())))
-  }
-
-  penetrationResolutionBallAndWall(ball: Ball){
-    Wall.penetrationResolutionBallAndWall(ball, this);
-  }
-
-  static collisionResolutionBallAndWall(ball:Ball, wall: Wall){
-    const normal = ball.position.subtr(Wall.closestPosintBallandWall(ball, wall)).unit();
-    const separatingVelocity = Vector.dot(ball.velocity, normal);
-    const newSeparatinVelcity = -separatingVelocity * ball.elasticity;
-    const vectorSeparatingDifference = separatingVelocity - newSeparatinVelcity;
-    ball.velocity = (ball.velocity.add(normal.mult(-vectorSeparatingDifference)));
-  }
-
-  collisionResolutionBallAndWall(ball: Ball){
-    Wall.collisionResolutionBallAndWall(ball, this);
   }
 }

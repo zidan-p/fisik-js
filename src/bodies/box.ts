@@ -56,8 +56,8 @@ export class Box extends Body {
     // if(this.directionMovement.left) this._acceleration.x = -this._accelerationIncrement;
     // if(this.directionMovement.right) this._acceleration.x = this._accelerationIncrement;
 
-    if(this.directionMovement.left) this._angleVelocity -= 0.005;
-    if(this.directionMovement.right) this._angleVelocity += 0.005;
+    if(this.directionMovement.left) this._angleVelocity -= this._angleAcceleration;
+    if(this.directionMovement.right) this._angleVelocity += this._angleAcceleration;
 
     if(!this.directionMovement.up && !this.directionMovement.down){
       this._acceleration = new Vector(0,0)

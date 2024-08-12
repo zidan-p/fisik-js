@@ -27,7 +27,7 @@ export abstract class Body {
 
   protected _angleVelocity: number = 0;
   protected _angleFriction?: number;
-  protected _angleAcceleration?: number;
+  protected _angleAcceleration: number = 0.015;
   protected _angleAccelerationIncrement?: number;
 
   protected _velocity = new Vector(0,0);
@@ -70,6 +70,8 @@ export abstract class Body {
   public get velocity(){return this._velocity}
   public set velocity(v: Vector){this._velocity = v}
 
+  public get friction(){return this._friction}
+  public set friction(f: number){this._friction = f}
 
   public get angleVelocity(){return this._angleVelocity}
   public set angleVelocity(n: number){this._angleVelocity = n}
@@ -85,10 +87,12 @@ export abstract class Body {
   /** default using mass value */
   public set inertia(inert: number){this._inertia = inert;}
   public setDefaultInertia(){
+
     // @ts-ignore
     if(Boolean(this.components[0]?.width as number) && this.components[0]?.length){
       // @ts-ignore
       this._inertia = this._mass * (this.components[0].width**2 + (this.components[0].length + 2 * this.components[0].width)**2 ) / 12;
+      return;
     }
     this._inertia = this._mass * (0**2 + (0 + 2 * 0)**2 ) / 12;
   }

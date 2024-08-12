@@ -109,52 +109,6 @@ export class Ball extends Body implements VertexContainer {
     this.drawer.fillText("M : " + this._mass, this._components[0].position.x - 10, this._components[0].position.y - 5);
     this.drawer.fillText("E : " + this._elasticity, this._components[0].position.x - 10, this._components[0].position.y + 5);
   }
-
-
-  static collisionDetectionBetweenBall(ball1: Ball, ball2: Ball){
-    throw new Error("collision not initialized")
-    // if(ball1.getRadius() + ball2.getRadius() >= ball2.getPosition().subtr(ball1.getPosition()).mag()) return true;
-    // return false;
-  }
-
-  collisionDetectionBetweenBall(ball: Ball){
-    return Ball.collisionDetectionBetweenBall(this, ball)
-  }
-
-
-  static penetrationResolutionBetweenBall(ball1: Ball, ball2: Ball){
-    throw new Error("penetration resolution not initialized")
-    // const distance = ball1.getPosition().subtr(ball2.getPosition());
-    // const penetrationDepth = ball1.getRadius() + ball2.getRadius() - distance.mag();
-    // const penetrationResolutionBetweenBall = distance.unit().mult(penetrationDepth / (ball1.getInverseMass() + ball2.getInverseMass()));
-    // ball1.setPosition(ball1.getPosition().add(penetrationResolutionBetweenBall.mult(ball1.getInverseMass())));
-    // ball2.setPosition(ball2.getPosition().add(penetrationResolutionBetweenBall.mult(-ball2.getInverseMass())));
-  }
-
-  penetrationResolutionBetweenBall(ball: Ball){
-    Ball.penetrationResolutionBetweenBall(this, ball);
-  }
-
-  
-  static collisionResolutionBetweenBall(ball1: Ball, ball2: Ball){
-    throw new Error("Not defined")
-    // const normal = ball1.getPosition().subtr(ball2.getPosition()).unit();
-    // const relativeVelocity = ball1._velocity.subtr(ball2._velocity);
-    // const separatingVelocity = Vector.dot(relativeVelocity, normal);
-    // const newSeparatingVelocity = -separatingVelocity * Math.min(ball2.getElasticity(), ball1.getElasticity()); //elsaticity implementation
-
-    // const separatingVelocityDifference = newSeparatingVelocity - separatingVelocity;
-    // const impulse = separatingVelocityDifference / (ball1.getInverseMass() + ball2.getInverseMass());
-    // const impulseVelocity = normal.mult(impulse);
-    
-    // ball1._velocity = ball1._velocity.add(impulseVelocity.mult(ball1.getInverseMass()));
-    // ball2._velocity = ball2._velocity.add(impulseVelocity.mult(-ball2.getInverseMass()));
-  }
-
-
-  collisionResolutionBetweenBall(ball: Ball){
-    Ball.collisionResolutionBetweenBall(this, ball);
-  }
 }
 
 
@@ -162,17 +116,17 @@ export class Ball extends Body implements VertexContainer {
 export function generateRandomBall(count: number, canvas: HTMLCanvasElement, drawer: Drawer){
   const balls: Ball[] = [];
 
-  for(let i = 0; i < 3; i ++){
+  for(let i = 0; i < count; i ++){
     const newObj = new Ball(
       new Vector(Math.random() * canvas.clientWidth, Math.random() * canvas.clientHeight),
       NumberUtils.getRandomInt(10, 50),
       drawer, 
-      NumberUtils.getRandomInt(10, 1000), 
+      NumberUtils.getRandomInt(10, 30), 
       "#6ee7b7"
     );
 
-    newObj.elasticity = (NumberUtils.getRandomInt(0,3))
-
+    newObj.elasticity = (NumberUtils.getRandomInt(1,3))
+    newObj.friction = 0.001
     balls.push(newObj);
   }
   
