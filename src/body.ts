@@ -52,7 +52,7 @@ export abstract class Body {
   constructor(position: Vector, angle: number, mass: number, controller?: Controller){
     this._position = position
     this._angle = angle;
-    this.mass = mass;
+    this._mass = mass;
     this.controller = controller;
     this.registerController();
   }
@@ -104,14 +104,15 @@ export abstract class Body {
     }
   }
 
-  public setNganu
-
-  public set mass(n: number){
-    this._mass = n;
-    
+  public setPhysicsComponent(){
     this.setDefaultInverseMass();
     this.setDefaultInertia(); //it must first before inverse innertia
     this.setDefaultInverseInertia();
+  } 
+
+  public set mass(n: number){
+    this._mass = n;
+    this.setPhysicsComponent();
   }
   public get mass(){return this._mass}
   public getMass(){return this._mass};

@@ -45,6 +45,7 @@ export class Ball extends Body implements VertexContainer {
 
     this._components = [new Circle(position, radius, {drawer, fillColor: color, strokeColor})]
 
+    this.setPhysicsComponent();
   }
 
 

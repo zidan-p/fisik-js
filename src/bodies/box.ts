@@ -38,6 +38,7 @@ export class Box extends Body {
 
     this._components = [new Rectangle(start, end, width, drawOption)];
 
+    this.setPhysicsComponent();
   }
 
   public get components(){return this._components}

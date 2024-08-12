@@ -42,6 +42,7 @@ export class Capsule extends Body{
     this._controller = controller;
     this._drawer = drawOption.drawer
 
+    this.setPhysicsComponent();
     this.registerController()
   }
 

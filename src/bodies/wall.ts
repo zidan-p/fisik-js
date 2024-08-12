@@ -48,6 +48,7 @@ export class Wall extends Body implements LineSegment{
 
     this._components = [new Line(start, end, {drawer})];
 
+    this.setPhysicsComponent();
   }
 
   public get direction(){return this._direction}
