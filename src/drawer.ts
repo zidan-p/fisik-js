@@ -144,8 +144,10 @@ export class CanvasDrawer implements Drawer{
     this.ctx.beginPath();
     this.ctx.moveTo(points[0].x, points[0].y);
 
+    // move foe each point
     points.slice(1).forEach(p => this.ctx.lineTo(p.x, p.y));
     
+    // last move
     this.ctx.lineTo(points[0].x, points[0].y);
 
     if(strokeColor !== "none"){

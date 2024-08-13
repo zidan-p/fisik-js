@@ -10,6 +10,7 @@ import { Wall } from './bodies/wall';
 import { Body } from './body';
 import { Box } from './bodies/box';
 import { Collision } from './collision';
+import {Triangle} from "./shapes/triangle";
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -75,16 +76,22 @@ console.log("after registering box")
 // note, the player should be in first queue
 bodies.push(box2);
 bodies.push(playerBall);
-bodies.push(...balls);
-bodies.push(...capsules);
-bodies.push(...walls);
+// bodies.push(...balls);
+// bodies.push(...capsules);
+// bodies.push(...walls);
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;
 };
 
+const tri = new Triangle(new Vector(200, 200), new Vector(230, 270), new Vector(150, 280), {drawer});
+
 function mainLoop(timeStamp: number){
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+  tri.getVertices();
+  tri.draw();
+  tri.angle += 0.01;
 
   collisionData = [];
 
