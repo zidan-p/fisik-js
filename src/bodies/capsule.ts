@@ -13,7 +13,6 @@ export class Capsule extends Body{
   private _componets: [Rectangle, Circle, Circle];
 
 
-  private _vertex: Vector[];
 
 
 
@@ -35,10 +34,6 @@ export class Capsule extends Body{
 
     this._componets = [rect, circle1, circle2]
 
-
-
-    this._vertex = [];  
-
     this._controller = controller;
     this._drawer = drawOption.drawer
 
@@ -57,8 +52,6 @@ export class Capsule extends Body{
     if(this.directionMovement.down){ 
       this._acceleration = this._componets[0].direction.mult(this._accelerationIncrement);
     }
-    // if(this.directionMovement.left) this._acceleration.x = -this._accelerationIncrement;
-    // if(this.directionMovement.right) this._acceleration.x = this._accelerationIncrement;
 
     if(this.directionMovement.left) this._angleVelocity -= this._angleAcceleration;
     if(this.directionMovement.right) this._angleVelocity += this._angleAcceleration;

@@ -4,6 +4,7 @@ import { Circle } from "./shapes/circle";
 import { Line } from "./shapes/line";
 import { Rectangle } from "./shapes/rectangle";
 import { Shape } from "./shapes/shape.interface";
+import { Triangle } from "./shapes/triangle";
 import { Vector } from "./vector";
 
 
@@ -16,7 +17,7 @@ export abstract class Body {
 
   protected _angle: number;
 
-  abstract components: (Rectangle | Circle | Line)[];
+  abstract components: (Rectangle | Circle | Line | Triangle)[];
 
   // protected _edge: Vector;
   // protected _length: number;
@@ -80,7 +81,7 @@ export abstract class Body {
   public get inverseMass(){return this._inverseMass}
   public setDefaultInverseMass(){
     console.log("this mass : " + this.mass);
-    this.mass === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass;
+    this._mass === 0 ? this._inverseMass = 0 : this._inverseMass = 1 / this._mass;
   }
   
 

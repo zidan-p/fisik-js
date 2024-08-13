@@ -5,6 +5,7 @@ import { drawer } from "./main";
 import { Vector } from "./vector";
 import { Rectangle } from "./shapes/rectangle";
 import { Line } from "./shapes/line";
+import { Triangle } from "./shapes/triangle";
 
 export interface Projection {
   min: number;
@@ -106,7 +107,7 @@ export abstract class LineSegment {
 
 
 
-  static findAxes(ob1: Circle | Line | Rectangle, ob2: Circle | Line | Rectangle){
+  static findAxes(ob1: Circle | Line | Rectangle | Triangle, ob2: Circle | Line | Rectangle | Triangle){
     const axes: Vector[] = [];
 
     if(ob1 instanceof Circle && ob2 instanceof Circle){
@@ -176,7 +177,7 @@ export abstract class LineSegment {
    * @param o1 
    * @param o2 
    */
-  static sat(o1: Line | Circle | Rectangle, o2: Circle | Line | Rectangle): SATResult | false{
+  static sat(o1: Line | Circle | Rectangle | Triangle, o2: Circle | Line | Rectangle | Triangle): SATResult | false{
     let minOverlap: null | number = null;
     let smallestAxis: Vector;
     let vertexObject : VertexContainer;
