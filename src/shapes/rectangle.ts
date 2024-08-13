@@ -24,12 +24,6 @@ export class Rectangle implements Shape {
   public start: Vector;
   public end: Vector;
 
-  public directionMovement = {
-    up: false,
-    down: false,
-    right: false,
-    left: false
-  }
 
 
   private _drawer: Drawer;

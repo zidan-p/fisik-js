@@ -34,6 +34,8 @@ export interface Drawer{
     strokeColor?: string
   ): void;
   fillText(text: string, x: number, y: number, color?: string): void;
+
+  drawPolygon(point: Position[], color?: string, strokeColor?: string): void;
 }
 
 
@@ -132,6 +134,30 @@ export class CanvasDrawer implements Drawer{
       this.ctx.fillStyle = fillColor ?? "lightGreen";
       this.ctx.fill();
     }
+  }
+
+
+  drawPolygon(points: Position[], color?: string, strokeColor?: string): void {
+    if(!points.length) return; // dom;t do anything when empty
+
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(points[0].x, points[0].y);
+
+    points.slice(1).forEach(p => this.ctx.lineTo(p.x, p.y));
+    
+    this.ctx.lineTo(points[0].x, points[0].y);
+
+    if(strokeColor !== "none"){
+      this.ctx.strokeStyle = strokeColor ?? "black";
+      this.ctx.stroke();
+    }
+
+    if(color !== "none"){
+      this.ctx.fillStyle = color ??"red";
+      this.ctx.fill();
+    }
+    this.ctx.closePath();
   }
 
 }
