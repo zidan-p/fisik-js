@@ -11,6 +11,8 @@ import { Body } from './body';
 import { Box } from './bodies/box';
 import { Collision } from './collision';
 import {Star} from "./bodies/star";
+import {Pyramid} from "./bodies/pyramid";
+
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -24,7 +26,7 @@ let collisionData: Collision[] = []
 // --- player and ball --
 const playerBall = new Ball(new Vector(200, 200), 10, drawer, 100, "none","black", controller);
 // const ball = new Ball(new Vector(200, 200), 30, drawer, 1000, "none", "black");
-const balls = generateRandomBall(10, canvas, drawer);
+// const balls = generateRandomBall(10, canvas, drawer);
 
 
 
@@ -63,24 +65,26 @@ const capsules: Capsule[] = [];
 //   50, 10,
 //   {drawer, fillColor: "none"}
 // )
-capsules.push(new Capsule(new Vector(100, 50), new Vector(100, 200), 30,2, {drawer}));
+// capsules.push(new Capsule(new Vector(100, 50), new Vector(100, 200), 30,2, {drawer}));
 // capsules.push(playerCapsule);
 
 // bodies.push(capsule);
 
 // const box = new Box(new Vector(100, 100), new Vector(200, 100), 40, 20, {drawer, fillColor: "none"}, controller);
-const box2 = new Box(new Vector(100, 300), new Vector(150, 300), 40, 20, {drawer, fillColor: "none"});
+// const box2 = new Box(new Vector(100, 300), new Vector(150, 300), 40, 20, {drawer, fillColor: "none"});
 console.log("after registering box")
 
-const star = new Star(new Vector(300, 300), 100, 100, {drawer});
+// const star = new Star(new Vector(300, 300), 100, 100, {drawer, fillColor: "none"});
+const pyramid = new Pyramid(new Vector(300, 300), 100, 100, {drawer, fillColor: "none"});
 
 // note, the player should be in first queue
-bodies.push(box2);
+// bodies.push(box2);
 bodies.push(playerBall);
 // bodies.push(...balls);
 // bodies.push(...capsules);
 bodies.push(...walls);
-bodies.push(star);
+bodies.push(pyramid);
+// bodies.push(star);
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;
@@ -117,6 +121,7 @@ function mainLoop(timeStamp: number){
           );
 
           if(!satResult) continue;
+          // drawer.drawCircle(satResult.vertex?.x!, satResult.vertex?.y!, 10, undefined, undefined);
           if(Number(satResult.penetration) > Number(bestSAT.penetration)){
             bestSAT = satResult;
             ctx.fillText("COLLISION", 500, 400);
@@ -126,7 +131,8 @@ function mainLoop(timeStamp: number){
       }
       
       if(bestSAT.penetration !== null && bestSAT.axis !== null){
-
+        // drawer.drawCircle(bestSAT.vertex?.x!, bestSAT.vertex?.y!, 10, undefined, undefined);
+        console.log(bestSAT);
         collisionData.push(new Collision(bodies[index], bodies[bodyPair], bestSAT.axis, bestSAT.penetration, bestSAT.vertex!))
 
       }

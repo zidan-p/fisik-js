@@ -1,3 +1,4 @@
+import { Vector } from "./vector";
 
 
 
@@ -71,6 +72,13 @@ export class Matrix<TRow extends number = number, TCol extends number = number> 
     this.data[0][1] = -Math.sin(angle);
     this.data[1][0] = Math.sin(angle);
     this.data[1][1] = Math.cos(angle);
+  }
+
+  static multVector(mat: Matrix ,vec: Vector){
+    let result = new Vector(0,0);
+    result.x = mat.data[0][0]*vec.x + mat.data[0][1]*vec.y;
+    result.y = mat.data[1][0]*vec.x + mat.data[1][1]*vec.y;
+    return result;
   }
 
 }

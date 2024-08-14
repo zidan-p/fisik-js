@@ -92,7 +92,7 @@ export abstract class LineSegment {
   static getFirstShape(obj: unknown){
     if(obj instanceof Circle || obj instanceof Line) return 1;
     if(obj instanceof  Rectangle) return 2;
-
+    if(obj instanceof Triangle) return 3;
     throw new Error("Unknow Shape");
   }
 
@@ -122,31 +122,41 @@ export abstract class LineSegment {
         .subtr(ob1.position)
         .unit()
       )
-      axes.push((ob2 as Line).direction.normal());
-      if(ob2 instanceof Rectangle) axes.push(ob2.direction);
+    }
 
-      return axes;
+    if(ob1 instanceof Line) axes.push(ob1.direction.normal());
+
+    if(ob1 instanceof Rectangle){
+      axes.push(ob1.direction.normal());
+      axes.push(ob1.direction);
+    }
+
+    if(ob1 instanceof Triangle){
+      axes.push(ob1.vertex[1].subtr(ob1.vertex[0]).normal());
+      axes.push(ob1.vertex[2].subtr(ob1.vertex[1]).normal());
+      axes.push(ob1.vertex[0].subtr(ob1.vertex[2]).normal());
     }
 
     if(ob2 instanceof Circle){
-      axes.push(ob1.direction.normal());
-      if(ob1 instanceof Rectangle) axes.push(ob1.direction);
       axes.push(
-        LineSegment.closestVertexToPoint(ob1, ob2.position)!
-          .subtr(ob2.position)
-          .unit()
+        LineSegment
+        .closestVertexToPoint(ob1 as Line, ob2.position)!
+        .subtr(ob2.position)
+        .unit()
       )
+    }
 
-      return axes;
-    }
- 
-    axes.push(ob1.direction.normal());
-    if(ob1 instanceof Rectangle){
-      axes.push(ob1.direction);
-    }
-    axes.push(ob2.direction.normal());
+    if(ob2 instanceof Line) axes.push(ob2.direction.normal());
+
     if(ob2 instanceof Rectangle){
+      axes.push(ob2.direction.normal());
       axes.push(ob2.direction);
+    }
+
+    if(ob2 instanceof Triangle){
+      axes.push(ob2.vertex[1].subtr(ob2.vertex[0]).normal());
+      axes.push(ob2.vertex[2].subtr(ob2.vertex[1]).normal());
+      axes.push(ob2.vertex[0].subtr(ob2.vertex[2]).normal());
     }
     return axes;
   }
@@ -184,6 +194,8 @@ export abstract class LineSegment {
 
     const axes = LineSegment.findAxes(o1, o2);
 
+    // axes.forEach(a => drawer.drawCircle(a.x, a.y, 10, undefined, undefined, "none"))
+
     let projection1: Projection;
     let projection2: Projection;
     let firstShape = LineSegment.getFirstShape(o1);
@@ -193,6 +205,10 @@ export abstract class LineSegment {
       let overlap: number;
       projection1 = LineSegment.projectionOntoAxis(axes[index], o1);
       projection2 = LineSegment.projectionOntoAxis(axes[index], o2);
+
+      // drawer.drawCircle(projection1.collisionVertex.x, projection1.collisionVertex.y, 10);
+      // drawer.drawCircle(projection2.collisionVertex.x, projection2.collisionVertex.y, 10);
+
       overlap = Math.min(projection1.max, projection2.max) - Math.max(projection1.min, projection2.min);
       if(overlap < 0) return false;
 

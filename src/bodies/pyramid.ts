@@ -2,17 +2,17 @@ import { Controller } from "../controller";
 import { Drawer } from "../drawer";
 import { DrawOption } from "../shapes/draw-option.interface";
 import { Vector } from "../vector";
-import {Body} from "./../body"
-import {Triangle} from "./../shapes/triangle";
+import {Body} from "../body"
+import {Triangle} from "../shapes/triangle";
 
 
 
 
 
 
-export class Star extends Body{
+export class Pyramid extends Body{
   
-  private _componets: [Triangle, Triangle];
+  private _components: [Triangle];
 
 
   private _radius: number;
@@ -36,12 +36,12 @@ export class Star extends Body{
     const p3 = center.add(moveUp.mult(-radius / 2)).add(moveUp.normal().mult(radius * Math.sqrt(3) / 2));
     const triangle1 = new Triangle(p1, p2, p3, drawOption);
 
-    const pd1 = center.add(moveUp.mult(-radius));
-    const pd2 = center.add(moveUp.mult(radius / 2)).add(moveUp.normal().mult(-radius * Math.sqrt(3) / 2));
-    const pd3 = center.add(moveUp.mult(radius / 2)).add(moveUp.normal().mult(radius * Math.sqrt(3) / 2));
-    const triangle2 = new Triangle(pd1, pd2, pd3, drawOption);
+    // const pd1 = center.add(moveUp.mult(-radius));
+    // const pd2 = center.add(moveUp.mult(radius / 2)).add(moveUp.normal().mult(-radius * Math.sqrt(3) / 2));
+    // const pd3 = center.add(moveUp.mult(radius / 2)).add(moveUp.normal().mult(radius * Math.sqrt(3) / 2));
+    // const triangle2 = new Triangle(pd1, pd2, pd3, drawOption);
 
-    this._componets = [triangle1, triangle2];
+    this._components = [triangle1];
     this._radius = radius
 
     this._controller = controller;
@@ -54,8 +54,8 @@ export class Star extends Body{
   }
 
 
-  public set components(comp: [Triangle, Triangle]){this._componets = comp}
-  public get components(){return this._componets}
+  public set components(comp: [Triangle]){this._components = comp}
+  public get components(){return this._components}
 
   public setDefaultInertia(): void {
     this._inertia = this._mass * ((2 * this._radius )**2) / 12;
@@ -63,10 +63,10 @@ export class Star extends Body{
 
   keyControl(){
     if(this.directionMovement.up){
-      this._acceleration = this._componets[0].direction.mult(-this._accelerationIncrement);
+      this._acceleration = this._components[0].direction.mult(-this._accelerationIncrement);
     }
     if(this.directionMovement.down){ 
-      this._acceleration = this._componets[0].direction.mult(this._accelerationIncrement);
+      this._acceleration = this._components[0].direction.mult(this._accelerationIncrement);
     }
 
     if(this.directionMovement.left) this._angleVelocity -= this._angleAcceleration;
@@ -86,13 +86,13 @@ export class Star extends Body{
     this._angleVelocity *= 0.96; // let say it already min friction
     // this._angleVelocity *= 1; // let say it already min friction
 
-    this._componets[0].position = this._componets[0].position.add(this._velocity);
-    this._componets[0].angle += this._angleVelocity;
-    this._componets[0].getVertices();
+    this._components[0].position = this._components[0].position.add(this._velocity);
+    this._components[0].angle += this._angleVelocity;
+    this._components[0].getVertices();
 
-    this._componets[1].position = this._componets[0].position
-    this._componets[1].angle += this._angleVelocity;
-    this._componets[1].getVertices();
+    // this._componets[1].position = this._componets[0].position
+    // this._componets[1].angle += this._angleVelocity;
+    // this._componets[1].getVertices();
     
   }
 
@@ -104,8 +104,11 @@ export class Star extends Body{
 
   draw(){
 
-    this._componets[0].draw();
-    this._componets[1].draw();
+    this._components[0].draw();
+    // this._drawer.fillText("M : " + this._mass, this._components[0].position.x - 10, this._components[0].position.y - 5);
+    // this._drawer.fillText("E : " + this._elasticity, this._components[0].position.x - 10, this._components[0].position.y + 5);
+    this._drawer.fillText("angle velocity : " + this._angleVelocity , this._components[0].position.x - 10, this._components[0].position.y + 20);
+    // this._componets[1].draw();
   }
 
 }

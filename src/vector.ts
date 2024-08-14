@@ -11,6 +11,11 @@ export class Vector{
     public y: number
   ){}
 
+  set(x:number, y:number){
+    this.x = x;
+    this.y = y;
+  }
+
   toString(){return "{x : " + this.x + ", y : " + this.y + "}"}
 
   add(v: Vector){

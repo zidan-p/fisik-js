@@ -61,14 +61,26 @@ export class Triangle implements Shape {
   draw() {
     if(!this._drawer) return;
    this._drawer.drawPolygon(this._vertex, this._fillColor, this._strokeColor)
-  }
+   
+   this._drawer.fillText("ref diameter : " + this._refDiameter, this.position.x - 10, this.position.y - 5);
+   this._drawer.fillText("angle : " + this.angle, this.position.x - 10, this.position.y + 10);
 
+   this._drawer.drawCircle(this._refDiameter[0].x, this._refDiameter[0].y, 30, undefined, undefined, "red")
+   this._drawer.drawCircle(this._vertex[0].x, this._vertex[0].y, 6, undefined, undefined, "none")
+  }
+  
   getVertices(){
     this._rotationMatrix.rotationMatrix(this._angle);
-    this._direction = this._refDirection.multMatrix(this._rotationMatrix);
+    // this._direction = this._refDirection.multMatrix(this._rotationMatrix);
+    this._direction = Matrix.multVector(this._rotationMatrix, this._refDirection);
+    
+    this._vertex[0] = this._position.add(Matrix.multVector(this._rotationMatrix, this._refDiameter[0]));
+    this._vertex[1] = this._position.add(Matrix.multVector(this._rotationMatrix, this._refDiameter[1]));
+    this._vertex[2] = this._position.add(Matrix.multVector(this._rotationMatrix, this._refDiameter[2]));
 
-    this._vertex[0] = this._position.add(this._refDiameter[0].multMatrix(this._rotationMatrix));
-    this._vertex[1] = this._position.add(this._refDiameter[1].multMatrix(this._rotationMatrix));
-    this._vertex[2] = this._position.add(this._refDiameter[2].multMatrix(this._rotationMatrix));
+    // this._vertex[0] = this._position.add(this._refDiameter[0].multMatrix(this._rotationMatrix));
+    // this._vertex[1] = this._position.add(this._refDiameter[1].multMatrix(this._rotationMatrix));
+    // this._vertex[2] = this._position.add(this._refDiameter[2].multMatrix(this._rotationMatrix));
+    // this._vertex.forEach(ver => this._drawer?.drawCircle(ver.x, ver.y, 10, undefined, undefined));
   }
 }

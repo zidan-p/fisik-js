@@ -142,6 +142,11 @@ export class CanvasDrawer implements Drawer{
 
 
     this.ctx.beginPath();
+    // this.ctx.moveTo(points[0].x, points[0].y);
+    // this.ctx.lineTo(points[1].x, points[1].y);
+    // this.ctx.lineTo(points[2].x, points[2].y);
+    // this.ctx.lineTo(points[0].x, points[0].y);
+
     this.ctx.moveTo(points[0].x, points[0].y);
 
     // move foe each point

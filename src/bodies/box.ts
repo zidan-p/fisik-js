@@ -40,7 +40,7 @@ export class Box extends Body {
 
     this.setPhysicsComponent();
 
-    console.log("inverse inertia box : " + this._inverseInertia);
+    // console.log("inverse inertia box : " + this._inverseInertia);
   }
 
   public get components(){return this._components}
