@@ -77,17 +77,9 @@ export class Star extends Body{
   }
 
   reposition(){
-    this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
-    this._velocity = this._velocity.add(this._acceleration);
-    this._velocity = this._velocity.mult(1 - this._friction);
-
-    this._position = this._position.add(this._velocity);
+    super.reposition();
     this._componets[0].position = this._position;
     this._componets[1].position = this._position;
-
-
-    this._angleVelocity *= 0.96; // let say it already in friction
-    this._angle += this._angleVelocity;
     this._componets[0].getVertices(this._angle);
     this._componets[1].getVertices(this._angle);
     
@@ -99,10 +91,6 @@ export class Star extends Body{
     this.reposition();
   }
 
-  draw(){
-
-    this._componets[0].draw();
-    this._componets[1].draw();
-  }
+  render(){super.render()}
 
 }

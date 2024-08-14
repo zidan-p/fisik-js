@@ -60,14 +60,10 @@ export class Capsule extends Body{
   }
 
   reposition(){
-    this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
-    this._velocity = this._velocity.add(this._acceleration);
-    this._velocity = this._velocity.mult(1 - this._friction);
-    this._position = this._position.add(this._velocity);
-    this._componets[0].position = this.position;
+    super.reposition();
 
-    this._angleVelocity *= 0.96;
-    this._angle += this._angleVelocity;
+
+    this._componets[0].position = this.position;
     this._componets[0].angle = this._angle;
     this._componets[0].getVertices(this._angle);
 
@@ -81,11 +77,6 @@ export class Capsule extends Body{
     this.reposition();
   }
 
-  draw(){
-
-    this._componets[0].draw();
-    this._componets[1].draw();
-    this._componets[2].draw();
-  }
+  render(){super.render()}
 
 }

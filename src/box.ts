@@ -202,7 +202,7 @@ export class Box  {
     this.reposition();
   }
 
-  draw(){
+  render(){
     this._components[0].draw()
     // this._drawer.drawRectangle(this._vertex, "none", "black");
     // this._drawer.drawCircle(this._position.x, this._position.y, 10, undefined, undefined, "none", "red")

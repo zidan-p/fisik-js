@@ -58,7 +58,7 @@ export class Triangle implements Shape {
   get position(){return this._position}
   set position(p: Vector) {this._position = p}
 
-  draw() {
+  render() {
     if(!this._drawer) return;
    this._drawer.drawPolygon(this._vertex, this._fillColor, this._strokeColor)
    

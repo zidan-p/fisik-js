@@ -145,12 +145,26 @@ export abstract class Body {
 
   abstract keyControl(): void
 
-  abstract reposition(): void;
+  reposition(){
+    this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
+    this._velocity = this._velocity.add(this._acceleration);
+    this._velocity = this._velocity.mult(1 - this._friction);
+    this._position = this._position.add(this._velocity);
+    this._angleVelocity *= 0.9; 
+    this._angle += this._angleVelocity;
+  };
 
   move(){
     this.keyControl();
     this.reposition();
   }
 
-  abstract draw(): void
+  render(){
+    if(!this.components.length){
+      console.warn("no component for : " + this.constructor.name);
+      return;
+    }
+
+    this.components.forEach(c => c.render());
+  } 
 }

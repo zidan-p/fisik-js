@@ -103,7 +103,7 @@ export class Rectangle implements Shape {
       .add(this._direction.normal().mult(this._width / 2));
   }
 
-  draw(){
+  render(){
     this._drawer.drawRectangle(this._vertex, this._fillColor, this._strokeColor);
     this._drawer.drawCircle(this._position.x, this._position.y, 10, undefined, undefined, "none", "red")
   }

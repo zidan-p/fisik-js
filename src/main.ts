@@ -98,7 +98,7 @@ function mainLoop(timeStamp: number){
 
   bodies.forEach(body => {
     body.move();
-    body.draw();
+    body.render();
   })
 
   bodies.forEach((body, index) => {

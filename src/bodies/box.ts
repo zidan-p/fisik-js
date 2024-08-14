@@ -65,16 +65,8 @@ export class Box extends Body {
   }
 
   reposition(){
-    this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
-    this._velocity = this._velocity.add(this._acceleration);
-    this._velocity = this._velocity.mult(1 - this._friction);
-    this._position = this._position.add(this._velocity);
-
-
+    super.reposition();
     this._components[0].position = this._position;
-    this._angleVelocity *= 0.9; 
-    this._angle += this._angleVelocity;
-
     this._components[0].angle = this._angle;
 
     this._components[0].getVertices(this._angle);
@@ -86,8 +78,8 @@ export class Box extends Body {
     this.reposition();
   }
 
-  draw(){
-    this._components[0].draw()
+  render(){
+    super.render();
     // this._drawer.drawRectangle(this._vertex, "none", "black");
     // this._drawer.drawCircle(this._position.x, this._position.y, 10, undefined, undefined, "none", "red")
   }

@@ -44,7 +44,7 @@ export class Line implements Shape {
 
   public get length(){return this.direction.mult(0.5).mag()}
 
-  public draw(){
+  public render(){
 
     this._drawer?.drawCircle(this._center.x, this._center.y, 10)
 

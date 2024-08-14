@@ -77,17 +77,12 @@ export class Wall extends Body implements LineSegment{
     if(this.directionMovement.right) this._angleVelocity += this._angleAcceleration;
   }
 
-  public reposition(){
-    this._angle += this._angleVelocity;
-    this._angleVelocity *= 0.96;
-  }
+  public reposition(){ super.reposition()}
 
   move(){
     this.keyControl();
     this.reposition();
   }
 
-  draw(){
-    this._components[0].draw();
-  }
+  render(){super.render()}
 }

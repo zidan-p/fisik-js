@@ -78,19 +78,11 @@ export class Pyramid extends Body{
   }
 
   reposition(){
-    this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
-    this._velocity = this._velocity.add(this._acceleration);
-    this._velocity = this._velocity.mult(1 - this._friction);
 
-    
-    this._position = this._position.add(this._velocity);
+    super.reposition();
+
     this._components[0].position = this._position;
-
-
-    this._angleVelocity *= 0.96; // let say it already in friction
-    this._angle += this._angleVelocity;
     this._components[0].getVertices(this._angle);
-    
   }
 
 
@@ -99,9 +91,9 @@ export class Pyramid extends Body{
     this.reposition();
   }
 
-  draw(){
+  render(){
 
-    this._components[0].draw();
+    super.render()
     // this._drawer.fillText("M : " + this._mass, this._components[0].position.x - 10, this._components[0].position.y - 5);
     // this._drawer.fillText("E : " + this._elasticity, this._components[0].position.x - 10, this._components[0].position.y + 5);
     // this._drawer.fillText("angle velocity : " + this._angleVelocity , this._components[0].position.x - 10, this._components[0].position.y + 20);

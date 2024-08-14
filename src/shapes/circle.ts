@@ -40,7 +40,7 @@ export class Circle implements Shape {
 
   public get length(){return 2 * this._radius}
 
-  public draw(){
+  public render(){
     this._drawer?.drawCircle(
       this._position.x,
       this._position.y,

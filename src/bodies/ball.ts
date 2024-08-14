@@ -78,10 +78,7 @@ export class Ball extends Body implements VertexContainer {
   }
 
   reposition(){
-    this.acceleration = this.acceleration.unit().mult(this._accelerationIncrement);
-    this._velocity = this._velocity.add(this.acceleration);
-    this._velocity = this._velocity.mult(1 - this._friction);
-    this._position = this._position.add(this._velocity);
+    super.reposition();
     this._components[0].position = this._position;
 
   }
@@ -91,7 +88,7 @@ export class Ball extends Body implements VertexContainer {
     this.reposition();
   }
 
-  draw(){
+  render(){
     // this.drawer.drawCircle(this._position.x, this._position.y, this._radius, undefined, undefined, this.color, this.strokeColor);
 
     // draw info
@@ -100,7 +97,7 @@ export class Ball extends Body implements VertexContainer {
     // this.drawer.fillText("pos x: " + NumberUtils.round( this._components[0].position.x), 500, 400);
     // this.drawer.fillText("pos y: " + NumberUtils.round(this._components[0].position.y), 500, 390);
 
-    this._components[0].draw();
+    super.render();
 
     // also draw vector helper
     Vector.drawViewLine(this._components[0].position, this.acceleration, 50, this.drawer, "green");
