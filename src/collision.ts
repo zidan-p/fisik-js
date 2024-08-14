@@ -40,10 +40,10 @@ export class Collision {
     let penetrationResolution = this.normal
       .mult(this.penetrationDepth / (this.object1.inverseMass + this._object2.inverseMass));
 
-    this.object1.components[0].position = this.object1.components[0].position
+    this.object1.position = this.object1.position
       .add(penetrationResolution.mult(this.object1.inverseMass));
 
-    this.object2.components[0].position = this.object2.components[0].position
+    this.object2.position = this.object2.position
       .add(penetrationResolution.mult(-this.object2.inverseMass));
   }
 
@@ -54,11 +54,11 @@ export class Collision {
     // const normal = this.closestPoint.subtr(this.closestPoint).unit();
 
     // closing velocity
-    const collisionArm1 = this.closestPoint.subtr(this.object1.components[0].position);
+    const collisionArm1 = this.closestPoint.subtr(this.object1.position);
     const rotationVelocity1 = new Vector(-this.object1.angleVelocity * collisionArm1.y, this.object1.angleVelocity * collisionArm1.x);
     const closingVelocity1 = this.object1.velocity.add(rotationVelocity1);
 
-    const collisionArm2 = this.closestPoint.subtr(this.object2.components[0].position);
+    const collisionArm2 = this.closestPoint.subtr(this.object2.position);
     const rotationVelocity2 = new Vector(-this.object2.angleVelocity * collisionArm2.y, this.object2.angleVelocity * collisionArm2.x);
     const closingVelocity2 = this.object2.velocity.add(rotationVelocity2);
 

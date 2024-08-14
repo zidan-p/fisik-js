@@ -81,7 +81,8 @@ export class Ball extends Body implements VertexContainer {
     this.acceleration = this.acceleration.unit().mult(this._accelerationIncrement);
     this._velocity = this._velocity.add(this.acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
-    this._components[0].position = this._components[0].position.add(this._velocity);
+    this._position = this._position.add(this._velocity);
+    this._components[0].position = this._position;
 
   }
 

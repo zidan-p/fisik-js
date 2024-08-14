@@ -62,15 +62,15 @@ export class Triangle implements Shape {
     if(!this._drawer) return;
    this._drawer.drawPolygon(this._vertex, this._fillColor, this._strokeColor)
    
-   this._drawer.fillText("ref diameter : " + this._refDiameter, this.position.x - 10, this.position.y - 5);
-   this._drawer.fillText("angle : " + this.angle, this.position.x - 10, this.position.y + 10);
+  //  this._drawer.fillText("ref diameter : " + this._refDiameter, this.position.x - 10, this.position.y - 5);
+  //  this._drawer.fillText("angle : " + this.angle, this.position.x - 10, this.position.y + 10);
 
-   this._drawer.drawCircle(this._refDiameter[0].x, this._refDiameter[0].y, 30, undefined, undefined, "red")
-   this._drawer.drawCircle(this._vertex[0].x, this._vertex[0].y, 6, undefined, undefined, "none")
+  //  this._drawer.drawCircle(this._refDiameter[0].x, this._refDiameter[0].y, 30, undefined, undefined, "red")
+  //  this._drawer.drawCircle(this._vertex[0].x, this._vertex[0].y, 6, undefined, undefined, "none")
   }
   
-  getVertices(){
-    this._rotationMatrix.rotationMatrix(this._angle);
+  getVertices(angle: number){
+    this._rotationMatrix.rotationMatrix(angle);
     // this._direction = this._refDirection.multMatrix(this._rotationMatrix);
     this._direction = Matrix.multVector(this._rotationMatrix, this._refDirection);
     

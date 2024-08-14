@@ -82,8 +82,8 @@ export class Rectangle implements Shape {
   public get length(){return this._length}
 
 
-  public getVertices(){
-    this._rotationMatrix = Matrix.rotationMatrix(this._angle);
+  public getVertices(angle: number){
+    this._rotationMatrix = Matrix.rotationMatrix(angle);
     this._direction = this._refDirection.multMatrix(this._rotationMatrix);
 
     this._vertex[0] = this._position

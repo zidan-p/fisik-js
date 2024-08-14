@@ -74,7 +74,7 @@ const capsules: Capsule[] = [];
 // const box2 = new Box(new Vector(100, 300), new Vector(150, 300), 40, 20, {drawer, fillColor: "none"});
 console.log("after registering box")
 
-// const star = new Star(new Vector(300, 300), 100, 100, {drawer, fillColor: "none"});
+const star = new Star(new Vector(300, 300), 100, 100, {drawer, fillColor: "none"});
 const pyramid = new Pyramid(new Vector(300, 300), 100, 100, {drawer, fillColor: "none"});
 
 // note, the player should be in first queue
@@ -84,7 +84,7 @@ bodies.push(playerBall);
 // bodies.push(...capsules);
 bodies.push(...walls);
 bodies.push(pyramid);
-// bodies.push(star);
+bodies.push(star);
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;

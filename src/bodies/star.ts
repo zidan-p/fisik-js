@@ -50,7 +50,6 @@ export class Star extends Body{
     this.setPhysicsComponent();
     this.registerController()
 
-    console.log("inverse inertial star : " + this._inverseInertia);
   }
 
 
@@ -82,17 +81,15 @@ export class Star extends Body{
     this._velocity = this._velocity.add(this._acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
 
+    this._position = this._position.add(this._velocity);
+    this._componets[0].position = this._position;
+    this._componets[1].position = this._position;
 
-    this._angleVelocity *= 0.96; // let say it already min friction
-    // this._angleVelocity *= 1; // let say it already min friction
 
-    this._componets[0].position = this._componets[0].position.add(this._velocity);
-    this._componets[0].angle += this._angleVelocity;
-    this._componets[0].getVertices();
-
-    this._componets[1].position = this._componets[0].position
-    this._componets[1].angle += this._angleVelocity;
-    this._componets[1].getVertices();
+    this._angleVelocity *= 0.96; // let say it already in friction
+    this._angle += this._angleVelocity;
+    this._componets[0].getVertices(this._angle);
+    this._componets[1].getVertices(this._angle);
     
   }
 

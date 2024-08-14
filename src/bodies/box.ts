@@ -68,14 +68,16 @@ export class Box extends Body {
     this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
     this._velocity = this._velocity.add(this._acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
-    // this._position = this._position.add(this._velocity);
-    this._components[0].position = this._components[0].position.add(this._velocity);
+    this._position = this._position.add(this._velocity);
 
+
+    this._components[0].position = this._position;
     this._angleVelocity *= 0.9; 
-    this._components[0].angle += this._angleVelocity;
-    // this._angle += this._angleVelocity;
+    this._angle += this._angleVelocity;
 
-    this._components[0].getVertices();
+    this._components[0].angle = this._angle;
+
+    this._components[0].getVertices(this._angle);
   }
 
 

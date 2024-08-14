@@ -1,7 +1,5 @@
 import { Controller } from "../controller";
 import { Drawer } from "../drawer";
-import { LineSegment } from "../line-segment";
-import { Matrix } from "../matrix";
 import { Circle } from "../shapes/circle";
 import { DrawOption } from "../shapes/draw-option.interface";
 import { Rectangle } from "../shapes/rectangle";
@@ -65,11 +63,13 @@ export class Capsule extends Body{
     this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
     this._velocity = this._velocity.add(this._acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
-    this._componets[0].position = this._componets[0].position.add(this._velocity);
+    this._position = this._position.add(this._velocity);
+    this._componets[0].position = this.position;
 
     this._angleVelocity *= 0.96;
-    this._componets[0].angle += this._angleVelocity;
-    this._componets[0].getVertices();
+    this._angle += this._angleVelocity;
+    this._componets[0].angle = this._angle;
+    this._componets[0].getVertices(this._angle);
 
     this._componets[1].position = this._componets[0].position.add(this._componets[0].direction.mult(-this._componets[0].length/2))
     this._componets[2].position = this._componets[0].position.add(this._componets[0].direction.mult(this._componets[0].length/2))
