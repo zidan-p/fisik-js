@@ -27,12 +27,12 @@ export class Box  {
 
   private _angleVelocity: number;
   private _angleFriction?: number;
-  private _angleAcceleration?: number;
-  private _angleAccelerationIncrement?: number;
+  private _angleKeyForce?: number;
+  private _angleKeyForceIncrement?: number;
 
   private _velocity = new Vector(0,0);
   private _acceleration = new Vector(0,0);
-  private _accelerationIncrement = 1;
+  private _keyForce = 1;
   private _friction = 0.1
   private _mass: number = 10;
   private _inverseMass!: number;
@@ -166,13 +166,13 @@ export class Box  {
 
   keyControl(){
     if(this.directionMovement.up){
-      this._acceleration = this._components[0].direction.mult(-this._accelerationIncrement);
+      this._acceleration = this._components[0].direction.mult(-this._keyForce);
     }
     if(this.directionMovement.down){ 
-      this._acceleration = this._components[0].direction.mult(this._accelerationIncrement);
+      this._acceleration = this._components[0].direction.mult(this._keyForce);
     }
-    // if(this.directionMovement.left) this._acceleration.x = -this._accelerationIncrement;
-    // if(this.directionMovement.right) this._acceleration.x = this._accelerationIncrement;
+    // if(this.directionMovement.left) this._acceleration.x = -this._keyForce;
+    // if(this.directionMovement.right) this._acceleration.x = this._keyForce;
 
     if(this.directionMovement.left) this._angleVelocity -= 0.005;
     if(this.directionMovement.right) this._angleVelocity += 0.005;
@@ -183,7 +183,7 @@ export class Box  {
   }
 
   reposition(){
-    this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
+    this._acceleration = this._acceleration.unit().mult(this._keyForce);
     this._velocity = this._velocity.add(this._acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
     // this._position = this._position.add(this._velocity);

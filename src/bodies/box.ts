@@ -48,16 +48,16 @@ export class Box extends Body {
 
   keyControl(){
     if(this.directionMovement.up){
-      this._acceleration = this._components[0].direction.mult(-this._accelerationIncrement);
+      this._acceleration = this._components[0].direction.mult(-this._keyForce);
     }
     if(this.directionMovement.down){ 
-      this._acceleration = this._components[0].direction.mult(this._accelerationIncrement);
+      this._acceleration = this._components[0].direction.mult(this._keyForce);
     }
-    // if(this.directionMovement.left) this._acceleration.x = -this._accelerationIncrement;
-    // if(this.directionMovement.right) this._acceleration.x = this._accelerationIncrement;
+    // if(this.directionMovement.left) this._acceleration.x = -this._keyForce;
+    // if(this.directionMovement.right) this._acceleration.x = this._keyForce;
 
-    if(this.directionMovement.left) this._angleVelocity -= this._angleAcceleration;
-    if(this.directionMovement.right) this._angleVelocity += this._angleAcceleration;
+    if(this.directionMovement.left) this._angleVelocity -= this._angleKeyForce;
+    if(this.directionMovement.right) this._angleVelocity += this._angleKeyForce;
 
     if(!this.directionMovement.up && !this.directionMovement.down){
       this._acceleration = new Vector(0,0)

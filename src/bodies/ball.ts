@@ -58,16 +58,16 @@ export class Ball extends Body implements VertexContainer {
 
   keyControl(){
     if(this.directionMovement.left){
-      this.acceleration.x = -this._accelerationIncrement;
+      this.acceleration.x = -this._keyForce;
     }
     if(this.directionMovement.up){
-      this.acceleration.y = -this._accelerationIncrement;
+      this.acceleration.y = -this._keyForce;
     }
     if(this.directionMovement.right){
-      this.acceleration.x = this._accelerationIncrement;
+      this.acceleration.x = this._keyForce;
     }
     if(this.directionMovement.down){ 
-      this.acceleration.y = this._accelerationIncrement;
+      this.acceleration.y = this._keyForce;
     }
     if(!this.directionMovement.left && !this.directionMovement.right){
       this.acceleration.x = 0;

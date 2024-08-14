@@ -73,8 +73,8 @@ export class Wall extends Body implements LineSegment{
 
 
   public keyControl(){
-    if(this.directionMovement.left) this._angleVelocity -= this._angleAcceleration;
-    if(this.directionMovement.right) this._angleVelocity += this._angleAcceleration;
+    if(this.directionMovement.left) this._angleVelocity -= this._angleKeyForce;
+    if(this.directionMovement.right) this._angleVelocity += this._angleKeyForce;
   }
 
   public reposition(){ super.reposition()}

@@ -27,13 +27,13 @@ export abstract class Body {
   protected _position: Vector
 
   protected _angleVelocity: number = 0;
-  protected _angleFriction?: number;
-  protected _angleAcceleration: number = 0.015;
-  protected _angleAccelerationIncrement?: number;
+  protected _angleFriction: number = 0.05;
+  protected _angleKeyForce: number = 0.015;
+  protected _angleKeyForceIncrement?: number;
 
   protected _velocity = new Vector(0,0);
   protected _acceleration = new Vector(0,0);
-  protected _accelerationIncrement = 1;
+  protected _keyForce = 1;
   protected _friction = 0.1
   protected _mass: number = 10;
   protected _inverseMass!: number;
@@ -146,11 +146,11 @@ export abstract class Body {
   abstract keyControl(): void
 
   reposition(){
-    this._acceleration = this._acceleration.unit().mult(this._accelerationIncrement);
+    this._acceleration = this._acceleration.unit().mult(this._keyForce);
     this._velocity = this._velocity.add(this._acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
     this._position = this._position.add(this._velocity);
-    this._angleVelocity *= 0.9; 
+    this._angleVelocity *= (1 - this._angleFriction);
     this._angle += this._angleVelocity;
   };
 
