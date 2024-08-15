@@ -5,11 +5,13 @@ export interface Controller {
   onDown(listener: () => any): void;
   onRight(listener: () => any): void;
   onLeft(listener: () => any): void;
+  onSpace(listener: () => any): void;
 
   onReleaseUp(listener: () => any): void;
   onReleaseDown(listener: () => any): void;
   onReleaseRight(listener: () => any): void;
   onReleaseLeft(listener: () => any): void;
+  onReleaseSpace(listener: () => any): void;
 }
 
 
@@ -18,11 +20,13 @@ interface IControllerEventBus {
   onDown: (() => any)[],
   onRight: (() => any)[],
   onLeft: (() => any)[],
+  onSpace: (() => any)[],
 
   onReleaseUp: (() => any)[],
   onReleaseDown: (() => any)[],
   onReleaseRight: (() => any)[],
   onReleaseLeft: (() => any)[],
+  onReleaseSpace: (() => any)[],
 }
 
 export class HTMLElementController implements Controller {
@@ -32,10 +36,12 @@ export class HTMLElementController implements Controller {
     onDown: [],
     onRight: [],
     onLeft: [],
+    onSpace: [],
     onReleaseUp: [],
     onReleaseDown: [],
     onReleaseRight: [],
-    onReleaseLeft: []
+    onReleaseLeft: [],
+    onReleaseSpace: []
   }
 
   constructor(
@@ -51,6 +57,7 @@ export class HTMLElementController implements Controller {
         case "ArrowDown" : this.triggerEventBus("onDown"); break;
         case "ArrowRight" : this.triggerEventBus("onRight");  break;
         case "ArrowLeft" : this.triggerEventBus("onLeft");  break;
+        case "Space" : this.triggerEventBus("onSpace");  break;
       }
     })
 
@@ -60,6 +67,7 @@ export class HTMLElementController implements Controller {
         case "ArrowDown" : this.triggerEventBus("onReleaseDown");  break;
         case "ArrowRight" : this.triggerEventBus("onReleaseRight");  break;
         case "ArrowLeft" : this.triggerEventBus("onReleaseLeft");  break;
+        case "Space" : this.triggerEventBus("onReleaseSpace");  break;
       }
     })
   }
@@ -84,6 +92,9 @@ export class HTMLElementController implements Controller {
   onLeft(listener: () => any): void {
     this.addEventListener(listener, "onLeft")
   }
+  onSpace(listener: () => any): void {
+    this.addEventListener(listener, "onSpace")
+  }
   onReleaseUp(listener: () => any): void {
     this.addEventListener(listener, "onReleaseUp")
   }
@@ -95,6 +106,9 @@ export class HTMLElementController implements Controller {
   }
   onReleaseLeft(listener: () => any): void {
     this.addEventListener(listener, "onReleaseLeft")
+  }
+  onReleaseSpace(listener: () => any): void {
+    this.addEventListener(listener, "onReleaseSpace")
   }
 
 

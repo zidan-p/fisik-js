@@ -42,6 +42,7 @@ export class Capsule extends Body{
 
   public set components(comp: [Rectangle, Circle, Circle]){this._componets = comp}
   public get components(){return this._componets}
+  
 
   keyControl(){
     if(this.directionMovement.up){
@@ -59,16 +60,21 @@ export class Capsule extends Body{
     }
   }
 
-  reposition(){
-    super.reposition();
+  setPosition(position: Vector, angle?: number): void {
+    this._position = position;
+    this._componets[0].position = this._position;
 
-
-    this._componets[0].position = this.position;
-    this._componets[0].angle = this._angle;
-    this._componets[0].getVertices(this._angle);
-
+    // this._componets[0].angle = angle;
+    this._componets[0].getVertices(Number(angle) + this._angle);
+  
     this._componets[1].position = this._componets[0].position.add(this._componets[0].direction.mult(-this._componets[0].length/2))
     this._componets[2].position = this._componets[0].position.add(this._componets[0].direction.mult(this._componets[0].length/2))
+    
+  }
+
+  reposition(){
+    super.reposition();
+    this.setPosition(this.position);
   }
 
 

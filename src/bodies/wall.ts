@@ -11,12 +11,6 @@ export class Wall extends Body implements LineSegment{
 
   private _components: [Line];
 
-  public directionMovement = {
-    up: false,
-    down: false,
-    right: false,
-    left: false
-  }
 
   private  _direction: Vector;
   private _vertex: Vector[];
@@ -75,6 +69,11 @@ export class Wall extends Body implements LineSegment{
   public keyControl(){
     if(this.directionMovement.left) this._angleVelocity -= this._angleKeyForce;
     if(this.directionMovement.right) this._angleVelocity += this._angleKeyForce;
+  }
+
+  setPosition(position: Vector, angle?: number): void {
+    this.position = position;
+    if(angle) this._angle = angle;
   }
 
   public reposition(){ super.reposition()}

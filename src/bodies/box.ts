@@ -64,12 +64,17 @@ export class Box extends Body {
     }
   }
 
+  setPosition(position: Vector, angle?: number): void {
+    this.position = position;
+    this._components[0].position = position;
+    // this._components[0].angle ;
+  
+    this._components[0].getVertices(Number(angle) + this._angle);
+  }
+
   reposition(){
     super.reposition();
-    this._components[0].position = this._position;
-    this._components[0].angle = this._angle;
-
-    this._components[0].getVertices(this._angle);
+    this.setPosition(this.position, this._angle);
   }
 
 

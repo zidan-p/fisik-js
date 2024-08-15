@@ -31,6 +31,8 @@ export abstract class Body {
   protected _angleKeyForce: number = 0.015;
   protected _angleKeyForceIncrement?: number;
 
+  protected _maxSpeed: number = 0;
+
   protected _velocity = new Vector(0,0);
   protected _acceleration = new Vector(0,0);
   protected _keyForce = 1;
@@ -47,7 +49,8 @@ export abstract class Body {
     up: false,
     down: false,
     right: false,
-    left: false
+    left: false,
+    action: false
   }
 
   constructor(position: Vector, angle: number, mass: number, controller?: Controller){
@@ -76,6 +79,9 @@ export abstract class Body {
 
   public get angleVelocity(){return this._angleVelocity}
   public set angleVelocity(n: number){this._angleVelocity = n}
+
+  public get maxSpeed(){return this._maxSpeed}
+  public set maxSpeed(m: number){this._maxSpeed = m}
 
   public set inverseMass(n: number){this._inverseMass = n}
   public get inverseMass(){return this._inverseMass}
@@ -136,14 +142,18 @@ export abstract class Body {
     this.controller.onUp(() => this.directionMovement.up = true);
     this.controller.onRight(() => this.directionMovement.right = true);
     this.controller.onLeft(() => this.directionMovement.left = true);
+    this.controller.onSpace(() => this.directionMovement.action = true);
 
     this.controller.onReleaseDown(() => this.directionMovement.down = false);
     this.controller.onReleaseUp(() => this.directionMovement.up = false);
     this.controller.onReleaseRight(() => this.directionMovement.right = false);
     this.controller.onReleaseLeft(() => this.directionMovement.left = false);
+    this.controller.onReleaseSpace(() => this.directionMovement.action = false);
   }
 
   abstract keyControl(): void
+
+  abstract setPosition (position: Vector, angle?: number):void;
 
   reposition(){
     this._acceleration = this._acceleration.unit().mult(this._keyForce);
@@ -152,6 +162,11 @@ export abstract class Body {
     this._position = this._position.add(this._velocity);
     this._angleVelocity *= (1 - this._angleFriction);
     this._angle += this._angleVelocity;
+
+    if(this._velocity.mag() > this._maxSpeed && this._maxSpeed !== 0){
+      this._velocity = this.velocity.unit().mult(this._maxSpeed);
+    }
+
   };
 
   move(){

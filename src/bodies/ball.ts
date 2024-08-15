@@ -77,10 +77,14 @@ export class Ball extends Body implements VertexContainer {
     }
   }
 
+  setPosition(pos: Vector, angle?: number): void {
+    this._components[0].position = pos;
+    this.position = pos
+  }
+
   reposition(){
     super.reposition();
-    this._components[0].position = this._position;
-
+    this.setPosition(this.position);
   }
 
   move(){
