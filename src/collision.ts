@@ -1,5 +1,6 @@
 import { Body } from "./body";
-import { LineSegment } from "./line-segment";
+import { LineSegment, SATResult } from "./line-segment";
+import { Nullable } from "./types";
 import { Vector } from "./vector";
 
 
@@ -19,6 +20,41 @@ export class Collision {
     this._normal = normal;
     this._penetrationDepth = penetrationDepth;
     this._closestPoint = cp;
+  }
+
+  static collide(object1: Body, object2: Body){
+    let bestSAT: Nullable<SATResult> = {
+      axis: null,
+      penetration: null,
+      vertex: null
+    }
+
+    for(let indexComponent1 = 0; indexComponent1 < object1.components.length; indexComponent1++ ){
+      for(let indexComponent2 = 0; indexComponent2 < object2.components.length; indexComponent2++ ){
+
+        const satResult = LineSegment.sat(
+          object1.components[indexComponent1], 
+          object2.components[indexComponent2]
+        );
+
+        if(!satResult) continue;
+        // drawer.drawCircle(satResult.vertex?.x!, satResult.vertex?.y!, 10, undefined, undefined);
+        if(Number(satResult.penetration) > Number(bestSAT.penetration)){
+          bestSAT = satResult;
+          // ctx.fillText("COLLISION", 500, 400);
+          // console.log(bestSAT);
+        }
+      }
+    }
+    
+    if(bestSAT.penetration !== null && bestSAT.axis !== null){
+      // drawer.drawCircle(bestSAT.vertex?.x!, bestSAT.vertex?.y!, 10, undefined, undefined);
+      // console.log(bestSAT);
+      // collisionData.push(new Collision(object1, object2, bestSAT.axis, bestSAT.penetration, bestSAT.vertex!))
+
+      return bestSAT
+    }
+    else return false;
   }
 
   get object1(){return this._object1}

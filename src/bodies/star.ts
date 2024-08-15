@@ -86,7 +86,7 @@ export class Star extends Body{
 
   reposition(){
     super.reposition();
-    this.setPosition(this.position);
+    this.setPosition(this._position);
   }
 
 

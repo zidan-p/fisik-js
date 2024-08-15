@@ -86,9 +86,6 @@ bodies.push(...walls);
 bodies.push(pyramid);
 bodies.push(star);
 
-type Nullable<T> = {
-  [P in keyof T]: T[P] | null;
-};
 
 
 function mainLoop(timeStamp: number){
@@ -106,36 +103,9 @@ function mainLoop(timeStamp: number){
 
     
     for(let bodyPair = index + 1; bodyPair < bodies.length; bodyPair++ ){
-      let bestSAT: Nullable<SATResult> = {
-        axis: null,
-        penetration: null,
-        vertex: null
-      }
-
-      for(let indexComponent1 = 0; indexComponent1 < bodies[index].components.length; indexComponent1++ ){
-        for(let indexComponent2 = 0; indexComponent2 < bodies[bodyPair].components.length; indexComponent2++ ){
-
-          const satResult = LineSegment.sat(
-            bodies[index].components[indexComponent1], 
-            bodies[bodyPair].components[indexComponent2]
-          );
-
-          if(!satResult) continue;
-          // drawer.drawCircle(satResult.vertex?.x!, satResult.vertex?.y!, 10, undefined, undefined);
-          if(Number(satResult.penetration) > Number(bestSAT.penetration)){
-            bestSAT = satResult;
-            ctx.fillText("COLLISION", 500, 400);
-            // console.log(bestSAT);
-          }
-        }
-      }
-      
-      if(bestSAT.penetration !== null && bestSAT.axis !== null){
-        // drawer.drawCircle(bestSAT.vertex?.x!, bestSAT.vertex?.y!, 10, undefined, undefined);
-        console.log(bestSAT);
-        collisionData.push(new Collision(bodies[index], bodies[bodyPair], bestSAT.axis, bestSAT.penetration, bestSAT.vertex!))
-
-      }
+      const bestSAT = Collision.collide(bodies[index], bodies[bodyPair])
+      if(bestSAT) 
+        collisionData.push(new Collision(bodies[index], bodies[bodyPair], bestSAT.axis!, bestSAT.penetration!, bestSAT.vertex!))
     }
 
     

@@ -111,7 +111,11 @@ export abstract class LineSegment {
     const axes: Vector[] = [];
 
     if(ob1 instanceof Circle && ob2 instanceof Circle){
-      axes.push(ob2.position.subtr(ob1.position).unit());
+      if(ob2.position.subtr(ob1.position).mag() > 0){
+        axes.push(ob2.position.subtr(ob1.position).unit());
+      }else {
+        axes.push(new Vector(Math.random(), Math.random()).unit());
+      }
       return axes;
     }
 
