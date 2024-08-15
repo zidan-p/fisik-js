@@ -79,6 +79,7 @@ export class Pyramid extends Body{
 
   setPosition(position: Vector, angle?: number): void {
     this.position = position;
+    if(angle) this._angle = angle;
     this._components[0].position = position;
     this._components[0].getVertices(Number(angle) + this._angle);
   }
@@ -86,7 +87,7 @@ export class Pyramid extends Body{
   reposition(){
 
     super.reposition();
-    this.setPosition(this.position)
+    this.setPosition(this.position.add(this.velocity), this._angle + this.angleVelocity);
   }
 
 

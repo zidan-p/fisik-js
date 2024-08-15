@@ -53,6 +53,10 @@ export abstract class Body {
     action: false
   }
 
+  // collide body when two of them have saem layer.
+  // exception for layer zero, it should collide with everithing
+  protected _layer: number = 0;
+
   constructor(position: Vector, angle: number, mass: number, controller?: Controller){
     this._position = position
     this._angle = angle;
@@ -61,6 +65,8 @@ export abstract class Body {
     this.registerController();
   }
   
+  public get layer(){return this._layer}
+  public set layer(l: number){this._layer = l }
 
   public get acceleration(){return this._acceleration}
   public set acceleration(a: Vector){this._acceleration = a}
@@ -159,14 +165,14 @@ export abstract class Body {
     this._acceleration = this._acceleration.unit().mult(this._keyForce);
     this._velocity = this._velocity.add(this._acceleration);
     this._velocity = this._velocity.mult(1 - this._friction);
-    this._position = this._position.add(this._velocity);
     this._angleVelocity *= (1 - this._angleFriction);
-    this._angle += this._angleVelocity;
-
+    
     if(this._velocity.mag() > this._maxSpeed && this._maxSpeed !== 0){
       this._velocity = this.velocity.unit().mult(this._maxSpeed);
     }
-
+    
+    // this._position = this._position.add(this._velocity);
+    // this._angle += this._angleVelocity;
   };
 
   move(){

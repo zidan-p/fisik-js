@@ -62,6 +62,7 @@ export class Capsule extends Body{
 
   setPosition(position: Vector, angle?: number): void {
     this._position = position;
+    if(angle) this._angle = angle;
     this._componets[0].position = this._position;
 
     // this._componets[0].angle = angle;
@@ -74,7 +75,7 @@ export class Capsule extends Body{
 
   reposition(){
     super.reposition();
-    this.setPosition(this.position);
+    this.setPosition(this.position.add(this.velocity), this._angle + this.angleVelocity);
   }
 
 

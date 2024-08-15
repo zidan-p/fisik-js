@@ -84,7 +84,7 @@ export class Ball extends Body implements VertexContainer {
 
   reposition(){
     super.reposition();
-    this.setPosition(this.position);
+    this.setPosition(this.position.add(this.velocity));
   }
 
   move(){

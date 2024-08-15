@@ -87,34 +87,38 @@ bodies.push(pyramid);
 bodies.push(star);
 
 
-
-function mainLoop(timeStamp: number){
+function renderLoop(){
   ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-
-  collisionData = [];
-
   bodies.forEach(body => {
     body.move();
     body.render();
   })
 
-  bodies.forEach((body, index) => {
+}
 
+function gameLogic(){}
 
-    
+function physicsLoop(){
+  collisionData = [];
+  bodies.forEach((body, index) => {    
     for(let bodyPair = index + 1; bodyPair < bodies.length; bodyPair++ ){
       const bestSAT = Collision.collide(bodies[index], bodies[bodyPair])
       if(bestSAT) 
         collisionData.push(new Collision(bodies[index], bodies[bodyPair], bestSAT.axis!, bestSAT.penetration!, bestSAT.vertex!))
     }
-
-    
   })
   
   collisionData.forEach(col => {
     col.penetrationresolution();
     col.collisionResolution();
   })
+}
+
+
+function mainLoop(timeStamp: number){
+  renderLoop();
+  gameLogic();
+  physicsLoop();
 
   requestAnimationFrame(mainLoop);
 }

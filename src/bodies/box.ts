@@ -66,6 +66,7 @@ export class Box extends Body {
 
   setPosition(position: Vector, angle?: number): void {
     this.position = position;
+    if(angle) this._angle = angle;
     this._components[0].position = position;
     // this._components[0].angle ;
   
@@ -74,7 +75,7 @@ export class Box extends Body {
 
   reposition(){
     super.reposition();
-    this.setPosition(this.position, this._angle);
+    this.setPosition(this.position.add(this.velocity), this._angle + this.angleVelocity);
   }
 
 

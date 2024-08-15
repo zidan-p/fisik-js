@@ -78,6 +78,7 @@ export class Star extends Body{
 
   setPosition(position: Vector, angle?: number): void {
     this.position = position
+    if(angle) this._angle = angle;
     this._componets[0].position = this._position;
     this._componets[1].position = this._position;
     this._componets[0].getVertices(this._angle + Number(angle));
@@ -86,7 +87,7 @@ export class Star extends Body{
 
   reposition(){
     super.reposition();
-    this.setPosition(this._position);
+    this.setPosition(this._position.add(this.velocity), this._angle + this.angleVelocity);
   }
 
 
